@@ -9,17 +9,19 @@ export class UsersService {
     };
   }
 
-  findAll() {
+  findAll(minPrice: number, category: string) {
     return {
       status: 'ok',
       message: 'users - findAll',
+      minPrice,
+      category,
     };
   }
 
-  findOne() {
+  findOne(id: string) {
     return {
       status: 'ok',
-      message: 'users - findOne',
+      message: `users - findOne - ${id}`,
     };
   }
 }

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { RegisterDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  register() {
+  register(registerDto: RegisterDto) {
     return {
       status: 'ok',
       message: 'Register auth endpoint',
+      payload: registerDto,
     };
   }
 
@@ -23,11 +25,11 @@ export class AuthService {
     return this.usersService.create();
   }
 
-  findAll() {
-    return this.usersService.findAll();
+  findAll(minPrice: number, category: string) {
+    return this.usersService.findAll(minPrice, category);
   }
 
-  findOne() {
-    return this.usersService.findOne();
+  findOne(id: string) {
+    return this.usersService.findOne(id);
   }
 }
