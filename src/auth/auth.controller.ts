@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './auth.dto';
 
@@ -23,14 +31,14 @@ export class AuthController {
 
   @Get('findAll')
   findAll(
-    @Query('minPrice') minPrice: number,
+    @Query('minPrice', ParseIntPipe) minPrice: number,
     @Query('category') category: string,
   ) {
     return this.authService.findAll(minPrice, category);
   }
 
   @Get('findOne/:id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.authService.findOne(id);
   }
 }

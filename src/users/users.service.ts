@@ -18,7 +18,7 @@ export class UsersService {
     };
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return {
       status: 'ok',
       message: `users - findOne - ${id}`,

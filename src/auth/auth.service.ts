@@ -29,7 +29,7 @@ export class AuthService {
     return this.usersService.findAll(minPrice, category);
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.usersService.findOne(id);
   }
 }
