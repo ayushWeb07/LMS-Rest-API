@@ -5,6 +5,11 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('keys')
+  getKeys() {
+    return this.usersService.getKeys();
+  }
+
   @Get('create')
   create() {
     return this.usersService.create();
