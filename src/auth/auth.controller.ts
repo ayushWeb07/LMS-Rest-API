@@ -14,4 +14,19 @@ export class AuthController {
   login() {
     return this.authService.login();
   }
+
+  @Get('create')
+  create() {
+    return this.authService.create();
+  }
+
+  @Get('findAll')
+  findAll() {
+    return this.authService.findAll();
+  }
+
+  @Get('findOne')
+  findOne() {
+    return this.authService.findOne();
+  }
 }
