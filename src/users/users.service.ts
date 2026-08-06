@@ -1,21 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { DatabaseConfig } from '../config/database_config.interface';
+import { ServerConfig } from '../config/server_config.interface';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly configService: ConfigService) {}
 
   getKeys() {
-    const port = this.configService.get<string>('PORT');
-    const dbUser = this.configService.get<string>('DATABASE_USER');
-    const dbPort = this.configService.get<string>('DATABASE_PORT');
+    // create the database config
+    const databaseConfig = this.configService.get<DatabaseConfig>('database');
+
+    // create the server config
+    const serverConfig = this.configService.get<ServerConfig>('server');
 
     return {
       status: 'ok',
-      message: 'users - create',
-      port,
-      dbUser,
-      dbPort,
+      message: 'users - get keys',
+      databaseConfig,
+      serverConfig,
     };
   }
 
