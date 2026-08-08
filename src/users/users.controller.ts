@@ -1,4 +1,11 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -17,8 +24,8 @@ export class UsersController {
 
   @Get('findAll')
   findAll(
-    @Query('minPrice', ParseIntPipe) minPrice: number,
-    @Query('category') category: string,
+    @Query('minPrice', new DefaultValuePipe(0), ParseIntPipe) minPrice: number,
+    @Query('category', new DefaultValuePipe('all')) category: string,
   ) {
     return this.usersService.findAll(minPrice, category);
   }
