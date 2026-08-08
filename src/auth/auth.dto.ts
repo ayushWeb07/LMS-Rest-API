@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  Matches,
   Max,
   MaxLength,
   Min,
@@ -27,18 +28,19 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   @Length(8)
+  @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$')
   password: string;
 
   @IsInt()
   @IsOptional()
   @Min(18)
   @Max(100)
-  age: number;
+  age?: number;
 
   @IsString()
   @IsOptional()
   @IsIn(['male', 'female'])
-  sex: string;
+  sex?: string;
 }
 
 export class LoginDto {
@@ -50,5 +52,6 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   @Length(8)
+  @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$')
   password: string;
 }

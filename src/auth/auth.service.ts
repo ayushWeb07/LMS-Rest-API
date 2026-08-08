@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { RegisterDto } from './auth.dto';
+import { LoginDto, RegisterDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +14,11 @@ export class AuthService {
     };
   }
 
-  login() {
+  login(loginDto: LoginDto) {
     return {
       status: 'ok',
       message: 'Login auth endpoint',
+      payload: loginDto,
     };
   }
 
