@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '../config/database_config.interface';
 import { ServerConfig } from '../config/server_config.interface';
+import { FindOneDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -38,10 +39,10 @@ export class UsersService {
     };
   }
 
-  findOne(id: number) {
+  findOne(findOneDto: FindOneDto) {
     return {
       status: 'ok',
-      message: `users - findOne - ${id}`,
+      message: `users - findOne - ${findOneDto.id}`,
     };
   }
 }

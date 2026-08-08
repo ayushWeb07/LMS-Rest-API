@@ -7,6 +7,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { FindOneDto } from './users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +32,7 @@ export class UsersController {
   }
 
   @Get('findOne/:id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  findOne(@Param() findOneDto: FindOneDto) {
+    return this.usersService.findOne(findOneDto);
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
+import { FindOneDto } from '../users/users.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +39,7 @@ export class AuthController {
   }
 
   @Get('findOne/:id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.authService.findOne(id);
+  findOne(@Param() findOneDto: FindOneDto) {
+    return this.authService.findOne(findOneDto);
   }
 }

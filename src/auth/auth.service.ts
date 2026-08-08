@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto, RegisterDto } from './auth.dto';
+import { FindOneDto } from '../users/users.dto';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
     return this.usersService.findAll(minPrice, category);
   }
 
-  findOne(id: number) {
-    return this.usersService.findOne(id);
+  findOne(findOneDto: FindOneDto) {
+    return this.usersService.findOne(findOneDto);
   }
 }
