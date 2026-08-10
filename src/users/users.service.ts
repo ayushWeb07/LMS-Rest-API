@@ -39,6 +39,10 @@ export class UsersService {
     };
   }
 
+  findOneForPost(userId: string): boolean {
+    return userId.length > 5;
+  }
+
   findOne(findOneDto: FindOneDto) {
     return {
       status: 'ok',
