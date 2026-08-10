@@ -1,12 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '../config/database_config.interface';
 import { ServerConfig } from '../config/server_config.interface';
 import { FindOneDto } from './users.dto';
+import { PostsService } from '../posts/posts.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+
+    @Inject(forwardRef(() => PostsService))
+    private readonly postsService: PostsService,
+  ) {}
 
   getKeys() {
     // create the database config
@@ -48,5 +54,9 @@ export class UsersService {
       status: 'ok',
       message: `users - findOne - ${findOneDto.id}`,
     };
+  }
+
+  findAllPostsOfUser() {
+    return this.postsService.findAllPostsOfUser();
   }
 }
