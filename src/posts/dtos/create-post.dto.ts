@@ -23,6 +23,7 @@ enum PostStatusEnum {
   SCHEDULED = 'scheduled',
 }
 
+/** This is DTO for creating a post */
 export class CreatePostDto {
   @IsString()
   @IsNotEmpty()

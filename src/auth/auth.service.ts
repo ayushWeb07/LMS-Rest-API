@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { FindAllDto, FindOneDto } from '../users/users.dto';
 
+/** This is the Auth service */
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}

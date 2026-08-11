@@ -152,6 +152,13 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is DTO for updating a post</p>
+
+            </p>
 
             <p class="comment">
                 <h3>Extends</h3>
@@ -251,10 +258,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/posts/dtos/patch-post.dto.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/posts/dtos/patch-post.dto.ts:15</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Id of the user</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -275,7 +288,9 @@ import { ApiProperty, PartialType } from &#x27;@nestjs/swagger&#x27;;
 import { IsInt } from &#x27;class-validator&#x27;;
 import { Type } from &#x27;class-transformer&#x27;;
 
+/** This is DTO for updating a post */
 export class PatchPostDto extends PartialType(CreatePostDto) {
+  /** Id of the user */
   @ApiProperty({
     description: &#x27;Id of the user&#x27;,
     type: &#x27;number&#x27;,

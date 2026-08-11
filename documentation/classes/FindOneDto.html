@@ -152,6 +152,13 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is DTO for finding a specific user</p>
+
+            </p>
 
 
 
@@ -226,10 +233,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/users/users.dto.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/users/users.dto.ts:36</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Id of the user</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -249,7 +262,9 @@
 import { Type } from &#x27;class-transformer&#x27;;
 import { ApiProperty, ApiPropertyOptional } from &#x27;@nestjs/swagger&#x27;;
 
+/** This is DTO for finding all the users */
 export class FindAllDto {
+  /** Min price to filter */
   @ApiPropertyOptional({
     description: &#x27;Min price to filter&#x27;,
     type: &#x27;number&#x27;,
@@ -259,6 +274,7 @@ export class FindAllDto {
   @Type(() &#x3D;&gt; Number)
   minPrice: number;
 
+  /** Category to filter */
   @ApiPropertyOptional({
     description: &#x27;Category to filter&#x27;,
     type: &#x27;string&#x27;,
@@ -268,7 +284,9 @@ export class FindAllDto {
   category: string;
 }
 
+/** This is DTO for finding a specific user */
 export class FindOneDto {
+  /** Id of the user */
   @ApiProperty({
     description: &#x27;Id of the user&#x27;,
     type: &#x27;number&#x27;,

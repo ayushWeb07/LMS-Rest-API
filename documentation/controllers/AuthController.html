@@ -152,6 +152,13 @@
             </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is the Auth controller</p>
+
+            </p>
 
 
 
@@ -591,7 +598,6 @@
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Query,
 } from &#x27;@nestjs/common&#x27;;
@@ -599,6 +605,7 @@ import { AuthService } from &#x27;./auth.service&#x27;;
 import { LoginDto, RegisterDto } from &#x27;./auth.dto&#x27;;
 import { FindAllDto, FindOneDto } from &#x27;../users/users.dto&#x27;;
 
+/** This is the Auth controller */
 @Controller(&#x27;auth&#x27;)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

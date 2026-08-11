@@ -1,15 +1,14 @@
 import {
   Controller,
-  DefaultValuePipe,
   Get,
   Param,
-  ParseIntPipe,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { ApiOperation } from '@nestjs/swagger';
 
+/** This is the Users controller */
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

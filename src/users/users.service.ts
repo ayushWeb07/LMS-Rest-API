@@ -5,6 +5,7 @@ import { ServerConfig } from '../config/server_config.interface';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
 
+/** This is the Users service */
 @Injectable()
 export class UsersService {
   constructor(

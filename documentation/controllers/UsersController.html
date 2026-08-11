@@ -152,6 +152,13 @@
             </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is the Users controller</p>
+
+            </p>
 
 
 
@@ -257,8 +264,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">src/users/users.controller.ts:23</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="22"
+                                    class="link-to-prism">src/users/users.controller.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -304,8 +311,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="31"
-                                    class="link-to-prism">src/users/users.controller.ts:31</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="30"
+                                    class="link-to-prism">src/users/users.controller.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -381,8 +388,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="39"
-                                    class="link-to-prism">src/users/users.controller.ts:39</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="38"
+                                    class="link-to-prism">src/users/users.controller.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -457,8 +464,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="18"
-                                    class="link-to-prism">src/users/users.controller.ts:18</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="17"
+                                    class="link-to-prism">src/users/users.controller.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -481,16 +488,15 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
   Controller,
-  DefaultValuePipe,
   Get,
   Param,
-  ParseIntPipe,
   Query,
 } from &#x27;@nestjs/common&#x27;;
 import { UsersService } from &#x27;./users.service&#x27;;
 import { FindAllDto, FindOneDto } from &#x27;./users.dto&#x27;;
 import { ApiOperation } from &#x27;@nestjs/swagger&#x27;;
 
+/** This is the Users controller */
 @Controller(&#x27;users&#x27;)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

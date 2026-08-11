@@ -152,6 +152,13 @@
             </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is the Posts controller</p>
+
+            </p>
 
 
 
@@ -259,8 +266,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="33"
-                                    class="link-to-prism">src/posts/posts.controller.ts:33</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="36"
+                                    class="link-to-prism">src/posts/posts.controller.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -335,14 +342,16 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="16"
-                                    class="link-to-prism">src/posts/posts.controller.ts:16</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="19"
+                                    class="link-to-prism">src/posts/posts.controller.ts:19</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>Find posts of one user</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -414,8 +423,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="48"
-                                    class="link-to-prism">src/posts/posts.controller.ts:48</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/posts/posts.controller.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -477,9 +486,12 @@ import {
 } from &#x27;@nestjs/swagger&#x27;;
 import { PatchPostDto } from &#x27;./dtos/patch-post.dto&#x27;;
 
+/** This is the Posts controller */
 @Controller(&#x27;posts&#x27;)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+
+  /** Find posts of one user */
   @Get(&#x27;:userId&#x27;)
   findPosts(@Param(&#x27;userId&#x27;) userId: string) {
     return {

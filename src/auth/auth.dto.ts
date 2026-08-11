@@ -13,42 +13,51 @@ import {
   MinLength,
 } from 'class-validator';
 
+/** This is DTO for auth registration */
 export class RegisterDto {
+  /** Username */
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
   @MaxLength(15)
   username: string;
 
+  /** Email */
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  /** Password */
   @IsString()
   @IsNotEmpty()
   @Length(8)
   @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$')
   password: string;
 
+  /** Age */
   @IsInt()
   @IsOptional()
   @Min(18)
   @Max(100)
   age?: number;
 
+  /** Sex */
   @IsString()
   @IsOptional()
   @IsIn(['male', 'female'])
   sex?: string;
 }
 
+/** This is DTO for auth login */
 export class LoginDto {
+  /** Email */
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  /** Password */
   @IsString()
   @IsNotEmpty()
   @Length(8)

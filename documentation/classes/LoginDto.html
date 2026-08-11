@@ -152,6 +152,13 @@
 <div class="tab-content">
     <div class="tab-pane fade active in" id="info">
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>This is DTO for auth login</p>
+
+            </p>
 
 
 
@@ -234,10 +241,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/auth/auth.dto.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/auth/auth.dto.ts:58</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Email</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -273,10 +286,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/auth/auth.dto.ts:56</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="65" class="link-to-prism">src/auth/auth.dto.ts:65</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Password</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -307,42 +326,51 @@
   MinLength,
 } from &#x27;class-validator&#x27;;
 
+/** This is DTO for auth registration */
 export class RegisterDto {
+  /** Username */
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
   @MaxLength(15)
   username: string;
 
+  /** Email */
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  /** Password */
   @IsString()
   @IsNotEmpty()
   @Length(8)
   @Matches(&#x27;^(?&#x3D;.*[a-z])(?&#x3D;.*[A-Z])(?&#x3D;.*\\d)(?&#x3D;.*[\\W_]).+$&#x27;)
   password: string;
 
+  /** Age */
   @IsInt()
   @IsOptional()
   @Min(18)
   @Max(100)
   age?: number;
 
+  /** Sex */
   @IsString()
   @IsOptional()
   @IsIn([&#x27;male&#x27;, &#x27;female&#x27;])
   sex?: string;
 }
 
+/** This is DTO for auth login */
 export class LoginDto {
+  /** Email */
   @IsString()
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
+  /** Password */
   @IsString()
   @IsNotEmpty()
   @Length(8)

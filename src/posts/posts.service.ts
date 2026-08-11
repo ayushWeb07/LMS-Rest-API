@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
 
+/** This is the Posts service */
 @Injectable()
 export class PostsService {
   constructor(

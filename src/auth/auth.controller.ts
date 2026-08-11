@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Query,
 } from '@nestjs/common';
@@ -11,6 +10,7 @@ import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
 import { FindAllDto, FindOneDto } from '../users/users.dto';
 
+/** This is the Auth controller */
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

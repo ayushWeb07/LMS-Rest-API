@@ -9,9 +9,12 @@ import {
 } from '@nestjs/swagger';
 import { PatchPostDto } from './dtos/patch-post.dto';
 
+/** This is the Posts controller */
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+
+  /** Find posts of one user */
   @Get(':userId')
   findPosts(@Param('userId') userId: string) {
     return {
