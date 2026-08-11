@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
-import { FindOneDto } from '../users/users.dto';
+import { FindAllDto, FindOneDto } from '../users/users.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,11 +31,8 @@ export class AuthController {
   }
 
   @Get('findAll')
-  findAll(
-    @Query('minPrice', ParseIntPipe) minPrice: number,
-    @Query('category') category: string,
-  ) {
-    return this.authService.findAll(minPrice, category);
+  findAll(@Query() findAllDto: FindAllDto) {
+    return this.authService.findAll(findAllDto);
   }
 
   @Get('findOne/:id')

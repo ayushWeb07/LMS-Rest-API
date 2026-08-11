@@ -7,7 +7,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { FindOneDto } from './users.dto';
+import { FindAllDto, FindOneDto } from './users.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -24,14 +25,17 @@ export class UsersController {
   }
 
   @Get('findAll')
-  findAll(
-    @Query('minPrice', new DefaultValuePipe(0), ParseIntPipe) minPrice: number,
-    @Query('category', new DefaultValuePipe('all')) category: string,
-  ) {
-    return this.usersService.findAll(minPrice, category);
+  @ApiOperation({
+    summary: 'This endpoint fetches all the users',
+  })
+  findAll(@Query() findAllDto: FindAllDto) {
+    return this.usersService.findAll(findAllDto);
   }
 
   @Get('findOne/:id')
+  @ApiOperation({
+    summary: 'This endpoint fetches the users by id',
+  })
   findOne(@Param() findOneDto: FindOneDto) {
     return this.usersService.findOne(findOneDto);
   }

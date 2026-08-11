@@ -2,7 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '../config/database_config.interface';
 import { ServerConfig } from '../config/server_config.interface';
-import { FindOneDto } from './users.dto';
+import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
 
 @Injectable()
@@ -36,12 +36,11 @@ export class UsersService {
     };
   }
 
-  findAll(minPrice: number, category: string) {
+  findAll(findAllDto: FindAllDto) {
     return {
       status: 'ok',
       message: 'users - findAll',
-      minPrice,
-      category,
+      findAllDto,
     };
   }
 
