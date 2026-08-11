@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOperation,
+  ApiResponse,
 } from '@nestjs/swagger';
+import { PatchPostDto } from './dtos/patch-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -30,5 +32,20 @@ export class PostsController {
   })
   createPost(@Body() createPostDto: CreatePostDto) {
     return this.postsService.createPost(createPostDto);
+  }
+
+  @Patch()
+  @ApiOperation({
+    description: 'This endpoint updates an existing post',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The existing post has been successfully updated.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid input data provided.',
+  })
+  patchPost(@Body() patchPostDto: PatchPostDto) {
+    return this.postsService.patchPost(patchPostDto);
   }
 }

@@ -1,6 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CreatePostDto } from './dtos/create-post.dto';
+import { PatchPostDto } from './dtos/patch-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -24,6 +25,13 @@ export class PostsService {
     return {
       message: 'Created the post',
       createPostDto,
+    };
+  }
+
+  patchPost(patchPostDto: PatchPostDto) {
+    return {
+      message: 'Updated the post',
+      patchPostDto,
     };
   }
 }
