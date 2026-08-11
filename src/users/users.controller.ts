@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { ApiOperation } from '@nestjs/swagger';
