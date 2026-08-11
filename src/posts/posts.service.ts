@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { CreatePostDto } from './dtos/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -17,5 +18,12 @@ export class PostsService {
 
   findAllPostsOfUser(): string {
     return `Fetching the posts`;
+  }
+
+  createPost(createPostDto: CreatePostDto) {
+    return {
+      message: 'Created the post',
+      createPostDto,
+    };
   }
 }
