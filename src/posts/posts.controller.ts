@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Patch,
@@ -17,6 +19,8 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { PatchPostDto } from './dtos/patch-post.dto';
+import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
+import { DeletePostDto } from './dtos/delete-post.dto';
 
 /** This is the Posts controller */
 @Controller('posts')
@@ -61,7 +65,23 @@ export class PostsController {
     };
   }
 
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  async findPostById(@Param() findPostByIdDto: FindPostByIdDto) {
+    const post = await this.postsService.findPostById(findPostByIdDto);
+
+    if (!post) {
+      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Post successfully fetched',
+      post,
+    };
+  }
+
   @Patch()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     description: 'This endpoint updates an existing post',
   })
@@ -72,7 +92,29 @@ export class PostsController {
   @ApiBadRequestResponse({
     description: 'Invalid input data provided.',
   })
-  patchPost(@Body() patchPostDto: PatchPostDto) {
-    return this.postsService.patchPost(patchPostDto);
+  async patchPost(@Body() patchPostDto: PatchPostDto) {
+    const post = await this.postsService.patchPost(patchPostDto);
+
+    if (!post) {
+      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Post successfully updated',
+    };
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  async deletePost(deletePostDto: DeletePostDto) {
+    const isDeleted = await this.postsService.deletePost(deletePostDto);
+
+    if (!isDeleted) {
+      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Post successfully deleted',
+    };
   }
 }
