@@ -28,12 +28,12 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   /** Find posts of one user */
-  @Get(':userId')
-  findPosts(@Param('userId') userId: string) {
-    return {
-      message: this.postsService.findPosts(userId),
-    };
-  }
+  // @Get(':userId')
+  // findPosts(@Param('userId') userId: string) {
+  //   return {
+  //     message: this.postsService.findPosts(userId),
+  //   };
+  // }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -65,7 +65,7 @@ export class PostsController {
     };
   }
 
-  @Get('/:id')
+  @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findPostById(@Param() findPostByIdDto: FindPostByIdDto) {
     const post = await this.postsService.findPostById(findPostByIdDto);
@@ -104,9 +104,9 @@ export class PostsController {
     };
   }
 
-  @Delete('/:id')
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async deletePost(deletePostDto: DeletePostDto) {
+  async deletePost(@Param() deletePostDto: DeletePostDto) {
     const isDeleted = await this.postsService.deletePost(deletePostDto);
 
     if (!isDeleted) {
