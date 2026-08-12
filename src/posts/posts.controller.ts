@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import {
@@ -23,6 +32,7 @@ export class PostsController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     description: 'This endpoint creates a new post',
   })
@@ -33,8 +43,22 @@ export class PostsController {
   @ApiBadRequestResponse({
     description: 'Invalid input data provided.',
   })
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.createPost(createPostDto);
+  async createPost(@Body() createPostDto: CreatePostDto) {
+    const post = await this.postsService.createPost(createPostDto);
+    return {
+      message: 'Post successfully created',
+      post,
+    };
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async findAllPosts() {
+    const posts = await this.postsService.findAllPosts();
+    return {
+      message: 'All the posts successfully fetched',
+      posts,
+    };
   }
 
   @Patch()
