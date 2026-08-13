@@ -10,7 +10,7 @@ export class PatchUserDto extends PartialType(CreateUserDto) {
     description: 'Id of the user',
     type: 'number',
   })
-  @IsInt()
   @Type(() => Number)
+  @IsInt()
   id: number;
 }

@@ -8,7 +8,7 @@ export class FindPostByIdDto {
     description: 'Id of the user',
     type: 'number',
   })
-  @IsInt()
   @Type(() => Number)
+  @IsInt()
   id: number;
 }
