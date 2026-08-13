@@ -7,10 +7,10 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { PostsModule } from '../posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServerConfig } from '../config/server_config.interface';
-import { DatabaseConfig } from '../config/database_config.interface';
 import { Post } from '../posts/post.entity';
 import { User } from '../users/user.entity';
+import { Tag } from '../tags/tag.entity';
+import { TagsModule } from '../tags/tags.module';
 
 @Module({
   imports: [
@@ -28,13 +28,14 @@ import { User } from '../users/user.entity';
         username: 'root',
         password: 'root',
         database: 'learning_nest_db',
-        entities: [Post, User],
+        entities: [User, Post, Tag],
         synchronize: true,
       }),
     }),
     AuthModule,
     UsersModule,
     PostsModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
