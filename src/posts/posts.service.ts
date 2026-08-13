@@ -44,18 +44,7 @@ export class PostsService {
     return post;
   }
 
-  async patchPost(patchPostDto: PatchPostDto): Promise<Post | null> {
-    // find the post
-    const post = await this.postRepository.findOne({
-      where: {
-        id: patchPostDto.id,
-      },
-    });
-
-    if (!post) {
-      return null;
-    }
-
+  async patchPost(patchPostDto: PatchPostDto): Promise<void> {
     // update the post
     await this.postRepository.update(
       {
@@ -65,28 +54,13 @@ export class PostsService {
         ...patchPostDto,
       },
     );
-
-    return post;
   }
 
-  async deletePost(deletePostDto: DeletePostDto) {
-    // find the post
-    const post = await this.postRepository.findOne({
-      where: {
-        id: deletePostDto.id,
-      },
-    });
-
-    if (!post) {
-      return false;
-    }
-
+  async deletePost(deletePostDto: DeletePostDto): Promise<void> {
     // delete the post
     await this.postRepository.softDelete({
       id: deletePostDto.id,
     });
-
-    return true;
   }
 
   findPosts(userId: string): string {

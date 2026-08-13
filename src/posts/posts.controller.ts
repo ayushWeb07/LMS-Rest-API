@@ -93,11 +93,15 @@ export class PostsController {
     description: 'Invalid input data provided.',
   })
   async patchPost(@Body() patchPostDto: PatchPostDto) {
-    const post = await this.postsService.patchPost(patchPostDto);
+    const post = await this.postsService.findPostById({
+      id: patchPostDto.id,
+    });
 
     if (!post) {
       throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
     }
+
+    await this.postsService.patchPost(patchPostDto);
 
     return {
       message: 'Post successfully updated',
@@ -107,11 +111,15 @@ export class PostsController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deletePost(@Param() deletePostDto: DeletePostDto) {
-    const isDeleted = await this.postsService.deletePost(deletePostDto);
+    const post = await this.postsService.findPostById({
+      id: deletePostDto.id,
+    });
 
-    if (!isDeleted) {
+    if (!post) {
       throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
     }
+
+    await this.postsService.deletePost(deletePostDto);
 
     return {
       message: 'Post successfully deleted',
