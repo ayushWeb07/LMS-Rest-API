@@ -1,0 +1,69 @@
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    name: 'username',
+    type: 'varchar',
+    length: 25,
+    nullable: false,
+    unique: true,
+    comment: 'Username of the user',
+  })
+  username: string;
+
+  @Column({
+    name: 'email',
+    type: 'varchar',
+    length: 25,
+    nullable: false,
+    unique: true,
+    comment: 'Email of the user',
+  })
+  email: string;
+
+  @Column({
+    name: 'password',
+    type: 'varchar',
+    length: 8,
+    nullable: false,
+    comment: 'Password of the user',
+  })
+  password: string;
+
+  @Column({
+    name: 'is_verified',
+    type: 'boolean',
+    default: false,
+    comment: 'Is the user verified?',
+  })
+  isVerified: boolean;
+
+  @CreateDateColumn({
+    name: 'created_at',
+    comment: 'When was the user created?',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    comment: 'When was the user last updated?',
+  })
+  updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    comment: 'When was the user deleted?',
+  })
+  deletedAt: Date;
+}

@@ -4,6 +4,9 @@ import { DatabaseConfig } from '../config/database_config.interface';
 import { ServerConfig } from '../config/server_config.interface';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { Repository } from 'typeorm';
 
 /** This is the Users service */
 @Injectable()
@@ -13,6 +16,9 @@ export class UsersService {
 
     @Inject(forwardRef(() => PostsService))
     private readonly postsService: PostsService,
+
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
   getKeys() {

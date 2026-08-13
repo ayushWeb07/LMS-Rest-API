@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerConfig } from '../config/server_config.interface';
 import { DatabaseConfig } from '../config/database_config.interface';
 import { Post } from '../posts/post.entity';
+import { User } from '../users/user.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { Post } from '../posts/post.entity';
         username: 'root',
         password: 'root',
         database: 'learning_nest_db',
-        entities: [Post],
+        entities: [Post, User],
         synchronize: true,
       }),
     }),

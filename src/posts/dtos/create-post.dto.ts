@@ -13,7 +13,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PostTypeEnum } from '../enums/post-type.enum';
 import { PostStatusEnum } from '../enums/post-status.enum';
 
-
 /** This is DTO for creating a post */
 export class CreatePostDto {
   @IsString()
