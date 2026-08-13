@@ -6,6 +6,8 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
+import { PostTypeEnum } from './enums/post-type.enum';
+import { PostStatusEnum } from './enums/post-status.enum';
 
 @Entity('posts')
 export class Post {
@@ -68,8 +70,9 @@ export class Post {
   @Column({
     name: 'post_type',
     type: 'enum',
-    enum: ['post', 'page', 'story'],
-    default: 'post',
+    enum: PostTypeEnum,
+    nullable: false,
+    default: PostTypeEnum.POST,
     comment: 'Type of the post',
   })
   postType: string;
@@ -77,8 +80,9 @@ export class Post {
   @Column({
     name: 'post_status',
     type: 'enum',
-    enum: ['draft', 'review', 'scheduled'],
-    default: 'draft',
+    enum: PostStatusEnum,
+    nullable: false,
+    default: PostStatusEnum.DRAFT,
     comment: 'Status of the post',
   })
   postStatus: string;

@@ -10,18 +10,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { PostTypeEnum } from '../enums/post-type.enum';
+import { PostStatusEnum } from '../enums/post-status.enum';
 
-enum PostTypeEnum {
-  POST = 'post',
-  PAGE = 'page',
-  STORY = 'story',
-}
-
-enum PostStatusEnum {
-  DRAFT = 'draft',
-  REVIEW = 'review',
-  SCHEDULED = 'scheduled',
-}
 
 /** This is DTO for creating a post */
 export class CreatePostDto {
