@@ -93,7 +93,6 @@ export class Post {
   @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
   })
-  @JoinColumn({ name: 'meta_option' })
   metaOption: MetaOption;
 
   @CreateDateColumn({

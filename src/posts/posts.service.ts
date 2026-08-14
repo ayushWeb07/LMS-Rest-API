@@ -72,21 +72,13 @@ export class PostsService {
       where: {
         id: deletePostDto.id,
       },
-      relations: {
-        metaOption: true,
-      },
     });
 
     if (!post) return false;
 
     // delete the post
-    await this.postRepository.softDelete({
+    await this.postRepository.delete({
       id: deletePostDto.id,
-    });
-
-    // delete the attached meta option
-    await this.metaOptionRepository.softDelete({
-      id: post.metaOption.id,
     });
 
     return true;
