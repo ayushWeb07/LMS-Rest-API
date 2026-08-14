@@ -11,6 +11,7 @@ import { Post } from '../posts/post.entity';
 import { User } from '../users/user.entity';
 import { Tag } from '../tags/tag.entity';
 import { TagsModule } from '../tags/tags.module';
+import { MetaOption } from '../meta-options/meta-option.entity';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { TagsModule } from '../tags/tags.module';
         username: 'root',
         password: 'root',
         database: 'learning_nest_db',
-        entities: [User, Post, Tag],
+        entities: [User, Post, Tag, MetaOption],
         synchronize: true,
       }),
     }),
