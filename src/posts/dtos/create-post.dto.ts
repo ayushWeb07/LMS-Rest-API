@@ -3,15 +3,19 @@ import {
   ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
+  IsDefined,
   IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PostTypeEnum } from '../enums/post-type.enum';
 import { PostStatusEnum } from '../enums/post-status.enum';
+import { CreateMetaOptionDto } from '../../meta-options/dtos/create-meta-option.dto';
+import { Type } from 'class-transformer';
 
 /** This is DTO for creating a post */
 export class CreatePostDto {
@@ -93,4 +97,9 @@ export class CreatePostDto {
     description: 'Status of the post',
   })
   postStatus: PostStatusEnum;
+
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => CreateMetaOptionDto)
+  metaOptionDto: CreateMetaOptionDto;
 }

@@ -12,6 +12,7 @@ import { User } from '../users/user.entity';
 import { Tag } from '../tags/tag.entity';
 import { TagsModule } from '../tags/tags.module';
 import { MetaOption } from '../meta-options/meta-option.entity';
+import { MetaOptionsModule } from '../meta-options/meta-options.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { MetaOption } from '../meta-options/meta-option.entity';
     UsersModule,
     PostsModule,
     TagsModule,
+    MetaOptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

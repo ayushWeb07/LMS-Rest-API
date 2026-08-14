@@ -7,6 +7,7 @@ import { Post } from './post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
+import { MetaOption } from '../meta-options/meta-option.entity';
 
 /** This is the Posts service */
 @Injectable()
@@ -17,6 +18,9 @@ export class PostsService {
 
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+
+    @InjectRepository(MetaOption)
+    private metaOptionRepository: Repository<MetaOption>,
   ) {}
 
   async createPost(createPostDto: CreatePostDto): Promise<Post> {
@@ -25,7 +29,6 @@ export class PostsService {
 
     // save it
     newPost = await this.postRepository.save(newPost);
-
     return newPost;
   }
 
