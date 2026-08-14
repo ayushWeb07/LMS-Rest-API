@@ -33,7 +33,11 @@ export class PostsService {
   }
 
   async findAllPosts(): Promise<Post[]> {
-    const posts = await this.postRepository.find();
+    const posts = await this.postRepository.find({
+      relations: {
+        metaOption: true,
+      },
+    });
     return posts;
   }
 
@@ -41,6 +45,9 @@ export class PostsService {
     const post = await this.postRepository.findOne({
       where: {
         id: findPostByIdDto.id,
+      },
+      relations: {
+        metaOption: true,
       },
     });
 
@@ -59,11 +66,30 @@ export class PostsService {
     );
   }
 
-  async deletePost(deletePostDto: DeletePostDto): Promise<void> {
+  async deletePost(deletePostDto: DeletePostDto): Promise<boolean> {
+    // find the post
+    const post = await this.postRepository.findOne({
+      where: {
+        id: deletePostDto.id,
+      },
+      relations: {
+        metaOption: true,
+      },
+    });
+
+    if (!post) return false;
+
     // delete the post
     await this.postRepository.softDelete({
       id: deletePostDto.id,
     });
+
+    // delete the attached meta option
+    await this.metaOptionRepository.softDelete({
+      id: post.metaOption.id,
+    });
+
+    return true;
   }
 
   findPosts(userId: string): string {

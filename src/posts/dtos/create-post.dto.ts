@@ -101,5 +101,5 @@ export class CreatePostDto {
   @IsDefined()
   @ValidateNested()
   @Type(() => CreateMetaOptionDto)
-  metaOptionDto: CreateMetaOptionDto;
+  metaOption: CreateMetaOptionDto;
 }

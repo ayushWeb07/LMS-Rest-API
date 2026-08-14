@@ -111,15 +111,11 @@ export class PostsController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deletePost(@Param() deletePostDto: DeletePostDto) {
-    const post = await this.postsService.findPostById({
-      id: deletePostDto.id,
-    });
+    const isPostDeleted = await this.postsService.deletePost(deletePostDto);
 
-    if (!post) {
+    if (!isPostDeleted) {
       throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
     }
-
-    await this.postsService.deletePost(deletePostDto);
 
     return {
       message: 'Post successfully deleted',
