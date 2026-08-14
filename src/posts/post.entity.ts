@@ -5,9 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { PostTypeEnum } from './enums/post-type.enum';
 import { PostStatusEnum } from './enums/post-status.enum';
+import { MetaOption } from '../meta-options/meta-option.entity';
 
 @Entity('posts')
 export class Post {
@@ -86,6 +89,12 @@ export class Post {
     comment: 'Status of the post',
   })
   postStatus: string;
+
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'meta_option' })
+  metaOption: MetaOption;
 
   @CreateDateColumn({
     name: 'created_at',

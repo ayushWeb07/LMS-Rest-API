@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Post } from '../posts/post.entity';
 
 @Entity('meta_option')
 export class MetaOption {
@@ -19,6 +21,9 @@ export class MetaOption {
     comment: 'All the meta options to be specified',
   })
   options: string;
+
+  @OneToOne(() => Post, (post) => post.metaOption)
+  post: Post;
 
   @CreateDateColumn({
     name: 'created_at',
