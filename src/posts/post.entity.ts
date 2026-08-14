@@ -8,11 +8,14 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { PostTypeEnum } from './enums/post-type.enum';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { User } from '../users/user.entity';
+import { Tag } from '../tags/tag.entity';
 
 @Entity('posts')
 export class Post {
@@ -65,14 +68,6 @@ export class Post {
   thumbnailUrl: string;
 
   @Column({
-    name: 'tags',
-    type: 'simple-array',
-    nullable: false,
-    comment: 'Tags of the post',
-  })
-  tags: string[];
-
-  @Column({
     name: 'post_type',
     type: 'enum',
     enum: PostTypeEnum,
@@ -120,4 +115,18 @@ export class Post {
   })
   @JoinColumn({ name: 'author_id' })
   author: User;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts)
+  @JoinTable({
+    name: 'post_tags',
+    joinColumn: {
+      name: 'post_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'tag_id',
+      referencedColumnName: 'id',
+    },
+  })
+  tags: Tag[];
 }

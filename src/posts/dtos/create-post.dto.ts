@@ -74,14 +74,8 @@ export class CreatePostDto {
   @ArrayNotEmpty()
   @ArrayMinSize(1)
   @ArrayMaxSize(5)
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
-  @MaxLength(10, { each: true })
-  @ApiProperty({
-    name: 'tags',
-    description: 'Tags of the post',
-  })
-  tags: string[];
+  @IsInt({ each: true })
+  tagIds: number[];
 
   @IsEnum(PostTypeEnum)
   @ApiProperty({

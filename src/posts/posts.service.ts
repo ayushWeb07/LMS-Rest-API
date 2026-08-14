@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
 import { MetaOption } from '../meta-options/meta-option.entity';
+import { TagsService } from '../tags/tags.service';
 
 /** This is the Posts service */
 @Injectable()
@@ -15,6 +16,8 @@ export class PostsService {
   constructor(
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
+
+    private readonly tagsService: TagsService,
 
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
@@ -30,6 +33,8 @@ export class PostsService {
     });
 
     if (!user) return null;
+
+    // find the tags
 
     // create the post instance
     let newPost = this.postRepository.create({
