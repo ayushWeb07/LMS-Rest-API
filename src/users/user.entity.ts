@@ -3,9 +3,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Post } from '../posts/post.entity';
 
 @Entity('users')
 export class User {
@@ -66,4 +68,7 @@ export class User {
     comment: 'When was the user deleted?',
   })
   deletedAt: Date;
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
 }

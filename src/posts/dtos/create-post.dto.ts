@@ -5,6 +5,7 @@ import {
   IsArray,
   IsDefined,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsString,
   MaxLength,
@@ -102,4 +103,8 @@ export class CreatePostDto {
   @ValidateNested()
   @Type(() => CreateMetaOptionDto)
   metaOption: CreateMetaOptionDto;
+
+  @IsInt()
+  @IsNotEmpty()
+  authorId: number;
 }

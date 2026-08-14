@@ -7,10 +7,12 @@ import {
   DeleteDateColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { PostTypeEnum } from './enums/post-type.enum';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
+import { User } from '../users/user.entity';
 
 @Entity('posts')
 export class Post {
@@ -112,4 +114,10 @@ export class Post {
     comment: 'Last deletion date of the post',
   })
   deletedAt: Date;
+
+  @ManyToOne(() => User, (user) => user.posts, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'author_id' })
+  author: User;
 }

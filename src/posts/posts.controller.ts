@@ -49,6 +49,11 @@ export class PostsController {
   })
   async createPost(@Body() createPostDto: CreatePostDto) {
     const post = await this.postsService.createPost(createPostDto);
+
+    if (!post) {
+      throw new HttpException('Such user does not exist', HttpStatus.NOT_FOUND);
+    }
+
     return {
       message: 'Post successfully created',
       post,

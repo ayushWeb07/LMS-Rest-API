@@ -23,9 +23,19 @@ export class PostsService {
     private metaOptionRepository: Repository<MetaOption>,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto): Promise<Post> {
+  async createPost(createPostDto: CreatePostDto): Promise<Post | null> {
+    // find the user
+    const user = await this.usersService.findUserById({
+      id: createPostDto.authorId,
+    });
+
+    if (!user) return null;
+
     // create the post instance
-    let newPost = this.postRepository.create(createPostDto);
+    let newPost = this.postRepository.create({
+      ...createPostDto,
+      author: user,
+    });
 
     // save it
     newPost = await this.postRepository.save(newPost);
@@ -36,6 +46,7 @@ export class PostsService {
     const posts = await this.postRepository.find({
       relations: {
         metaOption: true,
+        author: true,
       },
     });
     return posts;
@@ -48,6 +59,7 @@ export class PostsService {
       },
       relations: {
         metaOption: true,
+        author: true,
       },
     });
 
