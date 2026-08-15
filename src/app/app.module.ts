@@ -15,6 +15,7 @@ import { MetaOptionsModule } from '../meta-options/meta-options.module';
 import { DatabaseConfig } from '../config/interfaces/database_config.interface';
 import databaseConfig from '../config/database.config';
 import serverConfig from '../config/server.config';
+import envsValidationSchema from '../config/validations/envs.validation';
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
@@ -22,6 +23,7 @@ const NODE_ENV = process.env.NODE_ENV ?? 'development';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: envsValidationSchema,
       load: [serverConfig, databaseConfig],
       envFilePath: `.env.${NODE_ENV}`,
     }),
