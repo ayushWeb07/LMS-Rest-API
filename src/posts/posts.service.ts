@@ -35,11 +35,15 @@ export class PostsService {
     if (!user) return null;
 
     // find the tags
+    const tags = await this.tagsService.findMultipleTags({
+      tagIds: createPostDto.tagIds,
+    });
 
     // create the post instance
     let newPost = this.postRepository.create({
       ...createPostDto,
       author: user,
+      tags,
     });
 
     // save it
@@ -52,6 +56,7 @@ export class PostsService {
       relations: {
         metaOption: true,
         author: true,
+        tags: true,
       },
     });
     return posts;
@@ -65,6 +70,7 @@ export class PostsService {
       relations: {
         metaOption: true,
         author: true,
+        tags: true,
       },
     });
 

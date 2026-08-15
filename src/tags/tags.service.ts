@@ -23,7 +23,11 @@ export class TagsService {
   }
 
   async findAllTags(): Promise<Tag[]> {
-    const tags = await this.tagsRepository.find();
+    const tags = await this.tagsRepository.find({
+      relations: {
+        posts: true,
+      },
+    });
     return tags;
   }
 
@@ -31,6 +35,9 @@ export class TagsService {
     const tag = await this.tagsRepository.findOne({
       where: {
         id: findTagByIdDto.id,
+      },
+      relations: {
+        posts: true,
       },
     });
 

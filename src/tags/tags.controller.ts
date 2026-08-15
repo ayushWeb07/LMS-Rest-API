@@ -11,7 +11,6 @@ import {
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
-import { FindMultipleTagsDto } from './dtos/find-multiple-tags.dto';
 
 @Controller('tags')
 export class TagsController {
@@ -50,16 +49,6 @@ export class TagsController {
     return {
       message: 'Tag successfully fetched',
       tag,
-    };
-  }
-
-  @Get('multiple')
-  @HttpCode(HttpStatus.OK)
-  async findMultipleTags(@Body() findMultipleTagsDto: FindMultipleTagsDto) {
-    const tags = await this.tagsService.findMultipleTags(findMultipleTagsDto);
-    return {
-      message: 'The tags were successfully fetched',
-      tags,
     };
   }
 }
