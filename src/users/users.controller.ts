@@ -136,7 +136,7 @@ export class UsersController {
     };
   }
 
-  @Get('keys')
+  @Post('keys')
   getKeys() {
     return this.usersService.getKeys();
   }

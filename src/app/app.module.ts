@@ -14,11 +14,14 @@ import { TagsModule } from '../tags/tags.module';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { MetaOptionsModule } from '../meta-options/meta-options.module';
 
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
+      envFilePath: `.env.${NODE_ENV}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
