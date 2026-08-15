@@ -9,6 +9,7 @@ import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { TagsService } from '../tags/tags.service';
+import { Tag } from '../tags/tag.entity';
 
 /** This is the Posts service */
 @Injectable()
@@ -77,16 +78,44 @@ export class PostsService {
     return post;
   }
 
-  async patchPost(patchPostDto: PatchPostDto): Promise<void> {
-    // update the post
-    await this.postRepository.update(
-      {
+  async patchPost(patchPostDto: PatchPostDto): Promise<boolean> {
+    // find the post
+    const post = await this.postRepository.findOne({
+      where: {
         id: patchPostDto.id,
       },
-      {
-        ...patchPostDto,
+      relations: {
+        tags: true,
       },
-    );
+    });
+
+    if (!post) {
+      return false;
+    }
+
+    // find the tags
+    let updatedTags: Tag[] = [];
+
+    if (patchPostDto.tagIds) {
+      updatedTags = await this.tagsService.findMultipleTags({
+        tagIds: patchPostDto.tagIds,
+      });
+    }
+
+    // update the post properties
+    post.title = patchPostDto.title ?? post.title;
+    post.content = patchPostDto.content ?? post.content;
+    post.slug = patchPostDto.slug ?? post.slug;
+    post.schema = patchPostDto.schema ?? post.schema;
+    post.thumbnailUrl = patchPostDto.thumbnailUrl ?? post.thumbnailUrl;
+    post.postType = patchPostDto.postType ?? post.postType;
+    post.postStatus = patchPostDto.postStatus ?? post.postStatus;
+
+    // update the tags on post
+    post.tags = updatedTags.length > 0 ? updatedTags : post.tags;
+
+    await this.postRepository.save(post);
+    return true;
   }
 
   async deletePost(deletePostDto: DeletePostDto): Promise<boolean> {

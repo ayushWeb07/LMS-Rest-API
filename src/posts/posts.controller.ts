@@ -98,15 +98,11 @@ export class PostsController {
     description: 'Invalid input data provided.',
   })
   async patchPost(@Body() patchPostDto: PatchPostDto) {
-    const post = await this.postsService.findPostById({
-      id: patchPostDto.id,
-    });
+    const isPostUpdated = await this.postsService.patchPost(patchPostDto);
 
-    if (!post) {
+    if (!isPostUpdated) {
       throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
     }
-
-    await this.postsService.patchPost(patchPostDto);
 
     return {
       message: 'Post successfully updated',
