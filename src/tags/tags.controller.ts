@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpException,
@@ -11,6 +12,7 @@ import {
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
+import { DeleteTagDto } from './dtos/delete-tag.dto';
 
 @Controller('tags')
 export class TagsController {
@@ -49,6 +51,20 @@ export class TagsController {
     return {
       message: 'Tag successfully fetched',
       tag,
+    };
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteTag(@Param() deleteTagDto: DeleteTagDto) {
+    const isTagDeleted = await this.tagsService.deleteTag(deleteTagDto);
+
+    if (!isTagDeleted) {
+      throw new HttpException('Such tag does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Tag successfully deleted',
     };
   }
 }
