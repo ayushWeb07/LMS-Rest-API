@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from '../config/database_config.interface';
-import { ServerConfig } from '../config/server_config.interface';
+import { DatabaseConfig } from '../config/interfaces/database_config.interface';
+import { ServerConfig } from '../config/interfaces/server_config.interface';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
 import { InjectRepository } from '@nestjs/typeorm';
