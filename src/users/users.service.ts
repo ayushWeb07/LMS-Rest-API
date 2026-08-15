@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '../config/interfaces/database_config.interface';
 import { ServerConfig } from '../config/interfaces/server_config.interface';
@@ -28,6 +34,37 @@ export class UsersService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
+    // find the user by email and username
+    const existingUser = await this.usersRepository.findOne({
+      where: [
+        {
+          email: createUserDto.email,
+        },
+        {
+          username: createUserDto.username,
+        },
+      ],
+    });
+
+    if (existingUser) {
+      if (
+        existingUser.email === createUserDto.email &&
+        existingUser.username === createUserDto.username
+      ) {
+        throw new BadRequestException(
+          `User with such email and username already exists`,
+        );
+      } else if (existingUser.email === createUserDto.email) {
+        throw new BadRequestException(
+          `Email '${createUserDto.email}' already in use`,
+        );
+      } else {
+        throw new BadRequestException(
+          `Username '${createUserDto.username}' already taken`,
+        );
+      }
+    }
+
     // create a new user and save it
     let newUser = this.usersRepository.create(createUserDto);
     newUser = await this.usersRepository.save(newUser);
@@ -40,12 +77,18 @@ export class UsersService {
     return users;
   }
 
-  async findUserById(findUserByIdDto: FindUserByIdDto): Promise<User | null> {
+  async findUserById(findUserByIdDto: FindUserByIdDto): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: {
         id: findUserByIdDto.id,
       },
     });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with id '${findUserByIdDto.id}' does not exist`,
+      );
+    }
 
     return user;
   }
@@ -77,6 +120,51 @@ export class UsersService {
   }
 
   async patchUser(patchUserDto: PatchUserDto): Promise<void> {
+    // find the user by id
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: patchUserDto.id,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with id '${patchUserDto.id}' does not exist`,
+      );
+    }
+
+    // check if email got updated
+    if (patchUserDto.email) {
+      // check if this email already exists
+      const existingUser = await this.usersRepository.findOne({
+        where: {
+          email: patchUserDto.email,
+        },
+      });
+
+      if (existingUser) {
+        throw new BadRequestException(
+          `Email '${patchUserDto.email}' already in use`,
+        );
+      }
+    }
+
+    // check if username got updated
+    if (patchUserDto.username) {
+      // check if this username already exists
+      const existingUser = await this.usersRepository.findOne({
+        where: {
+          username: patchUserDto.username,
+        },
+      });
+
+      if (existingUser) {
+        throw new BadRequestException(
+          `Username '${patchUserDto.username}' already taken`,
+        );
+      }
+    }
+
     // update it
     await this.usersRepository.update(
       {
@@ -89,6 +177,19 @@ export class UsersService {
   }
 
   async deleteUser(deleteUserDto: DeleteUserDto): Promise<void> {
+    // find the user by id
+    const user = await this.usersRepository.findOne({
+      where: {
+        id: deleteUserDto.id,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with id '${deleteUserDto.id}' does not exist`,
+      );
+    }
+
     // delete the user
     await this.usersRepository.delete({
       id: deleteUserDto.id,

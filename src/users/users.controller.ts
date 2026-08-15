@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   Patch,
@@ -18,7 +17,6 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
-import { UserConflictEnum } from './enums/user-conflict.enum';
 
 /** This is the Users controller */
 @Controller('users')
@@ -28,31 +26,6 @@ export class UsersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() createUserDto: CreateUserDto) {
-    // find the user
-    const checkUserConflict =
-      await this.usersService.findUserByEmailAndUsername({
-        email: createUserDto.email,
-        username: createUserDto.username,
-      });
-
-    // email and username both taken
-    if (checkUserConflict === UserConflictEnum.BOTH_TAKEN) {
-      throw new HttpException(
-        'User with such email and username already exists',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    // email exists
-    if (checkUserConflict === UserConflictEnum.EMAIL_EXISTS) {
-      throw new HttpException('Email already in use', HttpStatus.BAD_REQUEST);
-    }
-
-    // username taken
-    if (checkUserConflict === UserConflictEnum.USERNAME_TAKEN) {
-      throw new HttpException('Username already taken', HttpStatus.BAD_REQUEST);
-    }
-
     const user = await this.usersService.createUser(createUserDto);
 
     return {
@@ -77,13 +50,6 @@ export class UsersController {
   async findUserById(@Param() findUserByIdDto: FindUserByIdDto) {
     const user = await this.usersService.findUserById(findUserByIdDto);
 
-    if (!user) {
-      throw new HttpException(
-        'Such user does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     return {
       message: 'User successfully fetched',
       user,
@@ -93,46 +59,22 @@ export class UsersController {
   @Patch()
   @HttpCode(HttpStatus.OK)
   async patchUser(@Body() patchUserDto: PatchUserDto) {
-    // find the user by id
-    const user = await this.usersService.findUserById({
-      id: patchUserDto.id,
-    });
-
-    if (!user) {
-      throw new HttpException(
-        'Such user does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     // update it
     await this.usersService.patchUser(patchUserDto);
 
     return {
-      message: 'User successfully updated',
+      message: `User with id '${patchUserDto.id}' got successfully updated`,
     };
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deleteUser(@Param() deleteUserDto: DeleteUserDto) {
-    // find the user by id
-    const user = await this.usersService.findUserById({
-      id: deleteUserDto.id,
-    });
-
-    if (!user) {
-      throw new HttpException(
-        'Such user does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     // delete it
     await this.usersService.deleteUser(deleteUserDto);
 
     return {
-      message: 'User successfully deleted',
+      message: `User with id '${deleteUserDto.id}' got successfully deleted`,
     };
   }
 
