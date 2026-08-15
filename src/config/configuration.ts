@@ -1,13 +1,13 @@
 export default () => ({
   database: {
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    user: process.env.DATABASE_USER,
-    pass: process.env.DATABASE_PASS,
-    name: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST ?? 'localhost',
+    port: parseInt(process.env.DATABASE_PORT ?? '3306', 10),
+    user: process.env.DATABASE_USER ?? 'root',
+    pass: process.env.DATABASE_PASS ?? 'root',
+    name: process.env.DATABASE_NAME ?? 'my_db',
   },
   server: {
-    port: process.env.SERVER_PORT,
-    env: process.env.NODE_ENV,
+    port: parseInt(process.env.SERVER_PORT ?? '8080', 10),
+    env: process.env.NODE_ENV ?? 'development',
   },
 });

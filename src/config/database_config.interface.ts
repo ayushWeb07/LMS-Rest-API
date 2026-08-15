@@ -3,7 +3,7 @@ export interface DatabaseConfig {
   /** The database host */
   host: string;
   /** The database port */
-  port: string;
+  port: number;
   /** The database username */
   user: string;
   /** The database password */

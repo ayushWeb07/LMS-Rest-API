@@ -13,6 +13,7 @@ import { Tag } from '../tags/tag.entity';
 import { TagsModule } from '../tags/tags.module';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { MetaOptionsModule } from '../meta-options/meta-options.module';
+import { DatabaseConfig } from '../config/database_config.interface';
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
@@ -26,16 +27,24 @@ const NODE_ENV = process.env.NODE_ENV ?? 'development';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: () => ({
-        type: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'root',
-        password: 'root',
-        database: 'learning_nest_db',
-        entities: [User, Post, Tag, MetaOption],
-        synchronize: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        // get the database config
+        const databaseConfig = configService.get<DatabaseConfig>('database');
+
+        if (!databaseConfig) {
+          throw new Error('Database configuration must be setup');
+        }
+        return {
+          type: 'mysql',
+          host: databaseConfig.host,
+          port: databaseConfig.port,
+          username: databaseConfig.user,
+          password: databaseConfig.pass,
+          database: databaseConfig.name,
+          entities: [User, Post, Tag, MetaOption],
+          synchronize: NODE_ENV === 'development',
+        };
+      },
     }),
     AuthModule,
     UsersModule,
