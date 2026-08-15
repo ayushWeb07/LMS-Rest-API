@@ -45,7 +45,9 @@ export class TagsService {
     return tag;
   }
 
-  async findMultipleTags(findMultipleTagsDto: FindMultipleTagsDto) {
+  async findMultipleTags(
+    findMultipleTagsDto: FindMultipleTagsDto,
+  ): Promise<Tag[]> {
     const tags = await this.tagsRepository.find({
       where: {
         id: In(findMultipleTagsDto.tagIds),

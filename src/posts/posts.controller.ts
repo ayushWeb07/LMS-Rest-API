@@ -50,10 +50,6 @@ export class PostsController {
   async createPost(@Body() createPostDto: CreatePostDto) {
     const post = await this.postsService.createPost(createPostDto);
 
-    if (!post) {
-      throw new HttpException('Such user does not exist', HttpStatus.NOT_FOUND);
-    }
-
     return {
       message: 'Post successfully created',
       post,
@@ -75,10 +71,6 @@ export class PostsController {
   async findPostById(@Param() findPostByIdDto: FindPostByIdDto) {
     const post = await this.postsService.findPostById(findPostByIdDto);
 
-    if (!post) {
-      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
-    }
-
     return {
       message: 'Post successfully fetched',
       post,
@@ -98,11 +90,7 @@ export class PostsController {
     description: 'Invalid input data provided.',
   })
   async patchPost(@Body() patchPostDto: PatchPostDto) {
-    const isPostUpdated = await this.postsService.patchPost(patchPostDto);
-
-    if (!isPostUpdated) {
-      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
-    }
+    await this.postsService.patchPost(patchPostDto);
 
     return {
       message: 'Post successfully updated',
@@ -112,11 +100,7 @@ export class PostsController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deletePost(@Param() deletePostDto: DeletePostDto) {
-    const isPostDeleted = await this.postsService.deletePost(deletePostDto);
-
-    if (!isPostDeleted) {
-      throw new HttpException('Such post does not exist', HttpStatus.NOT_FOUND);
-    }
+    await this.postsService.deletePost(deletePostDto);
 
     return {
       message: 'Post successfully deleted',

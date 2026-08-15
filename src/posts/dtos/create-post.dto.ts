@@ -23,7 +23,7 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
-  @MaxLength(35)
+  @MaxLength(100)
   @ApiProperty({
     name: 'title',
     description: 'Title of the post',
@@ -32,8 +32,8 @@ export class CreatePostDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(25)
-  @MaxLength(500)
+  @MinLength(100)
+  @MaxLength(1024)
   @ApiProperty({
     name: 'content',
     description: 'Content of the post',
@@ -42,40 +42,13 @@ export class CreatePostDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(10)
-  @ApiProperty({
-    name: 'slug',
-    description: 'Slug of the post',
-  })
-  slug: string;
-
-  @IsString()
-  @IsNotEmpty()
   @MinLength(5)
-  @MaxLength(35)
-  @ApiProperty({
-    name: 'schema',
-    description: 'Schema of the post',
-  })
-  schema: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(5)
-  @MaxLength(150)
+  @MaxLength(1024)
   @ApiProperty({
     name: 'thumbnailUrl',
     description: 'Thumbnail url of the post',
   })
   thumbnailUrl: string;
-
-  @IsArray()
-  @ArrayNotEmpty()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(5)
-  @IsInt({ each: true })
-  tagIds: number[];
 
   @IsEnum(PostTypeEnum)
   @ApiProperty({
@@ -92,6 +65,13 @@ export class CreatePostDto {
     description: 'Status of the post',
   })
   postStatus: PostStatusEnum;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(5)
+  @IsInt({ each: true })
+  tagIds: number[];
 
   @IsDefined()
   @ValidateNested()
