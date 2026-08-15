@@ -10,12 +10,6 @@ export class CreateTagDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(15)
-  @MaxLength(100)
+  @MaxLength(255)
   description: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(10)
-  slug: string;
 }

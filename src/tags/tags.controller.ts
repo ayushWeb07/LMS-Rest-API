@@ -7,12 +7,14 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
 import { DeleteTagDto } from './dtos/delete-tag.dto';
+import { PatchTagDto } from './dtos/patch-tag.dto';
 
 @Controller('tags')
 export class TagsController {
@@ -33,6 +35,7 @@ export class TagsController {
   @HttpCode(HttpStatus.OK)
   async findAllTags() {
     const tags = await this.tagsService.findAllTags();
+
     return {
       message: 'All the tags successfully fetched',
       tags,
@@ -44,24 +47,26 @@ export class TagsController {
   async findTagById(@Param() findTagByIdDto: FindTagByIdDto) {
     const tag = await this.tagsService.findTagById(findTagByIdDto);
 
-    if (!tag) {
-      throw new HttpException('Such tag does not exist', HttpStatus.NOT_FOUND);
-    }
-
     return {
       message: 'Tag successfully fetched',
       tag,
     };
   }
 
+  @Patch()
+  @HttpCode(HttpStatus.OK)
+  async patchTag(@Body() patchTagDto: PatchTagDto) {
+    await this.tagsService.patchTag(patchTagDto);
+
+    return {
+      message: 'Tag successfully updated',
+    };
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async deleteTag(@Param() deleteTagDto: DeleteTagDto) {
-    const isTagDeleted = await this.tagsService.deleteTag(deleteTagDto);
-
-    if (!isTagDeleted) {
-      throw new HttpException('Such tag does not exist', HttpStatus.NOT_FOUND);
-    }
+    await this.tagsService.deleteTag(deleteTagDto);
 
     return {
       message: 'Tag successfully deleted',

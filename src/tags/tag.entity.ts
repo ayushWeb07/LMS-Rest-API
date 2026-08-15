@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Generated,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -27,7 +28,7 @@ export class Tag {
   @Column({
     name: 'description',
     type: 'varchar',
-    length: 100,
+    length: 255,
     nullable: false,
     comment: 'Description of the Tag',
   })
@@ -35,12 +36,9 @@ export class Tag {
 
   @Column({
     name: 'slug',
-    type: 'varchar',
-    length: 10,
-    nullable: false,
-    unique: true,
     comment: 'Slug of the tag',
   })
+  @Generated('uuid')
   slug: string;
 
   @CreateDateColumn({

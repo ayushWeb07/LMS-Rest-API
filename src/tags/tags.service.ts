@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './tag.entity';
 import { In, Repository } from 'typeorm';
@@ -6,6 +6,7 @@ import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
 import { FindMultipleTagsDto } from './dtos/find-multiple-tags.dto';
 import { DeleteTagDto } from './dtos/delete-tag.dto';
+import { PatchTagDto } from './dtos/patch-tag.dto';
 
 @Injectable()
 export class TagsService {
@@ -24,23 +25,22 @@ export class TagsService {
   }
 
   async findAllTags(): Promise<Tag[]> {
-    const tags = await this.tagsRepository.find({
-      relations: {
-        posts: true,
-      },
-    });
+    const tags = await this.tagsRepository.find();
     return tags;
   }
 
-  async findTagById(findTagByIdDto: FindTagByIdDto): Promise<Tag | null> {
+  async findTagById(findTagByIdDto: FindTagByIdDto): Promise<Tag> {
     const tag = await this.tagsRepository.findOne({
       where: {
         id: findTagByIdDto.id,
       },
-      relations: {
-        posts: true,
-      },
     });
+
+    if (!tag) {
+      throw new NotFoundException(
+        `Tag with id '${findTagByIdDto.id}' does not exist`,
+      );
+    }
 
     return tag;
   }
@@ -57,7 +57,32 @@ export class TagsService {
     return tags;
   }
 
-  async deleteTag(deleteTagDto: DeleteTagDto): Promise<boolean> {
+  async patchTag(patchTagDto: PatchTagDto): Promise<void> {
+    // find the tag
+    const tag = await this.tagsRepository.findOne({
+      where: {
+        id: patchTagDto.id,
+      },
+    });
+
+    if (!tag) {
+      throw new NotFoundException(
+        `Tag with id '${patchTagDto.id}' does not exist`,
+      );
+    }
+
+    // update it
+    await this.tagsRepository.update(
+      {
+        id: patchTagDto.id,
+      },
+      {
+        ...patchTagDto,
+      },
+    );
+  }
+
+  async deleteTag(deleteTagDto: DeleteTagDto): Promise<void> {
     // find the tag
     const tag = await this.tagsRepository.findOne({
       where: {
@@ -65,13 +90,15 @@ export class TagsService {
       },
     });
 
-    if (!tag) return false;
+    if (!tag) {
+      throw new NotFoundException(
+        `Tag with id '${deleteTagDto.id}' does not exist`,
+      );
+    }
 
     // delete the tag
     await this.tagsRepository.delete({
       id: deleteTagDto.id,
     });
-
-    return true;
   }
 }
