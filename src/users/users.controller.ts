@@ -18,6 +18,7 @@ import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
+import { FindUsersDto } from './dtos/find-users.dto';
 
 /** This is the Users controller */
 @Controller('users')
@@ -48,8 +49,8 @@ export class UsersController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAllUsers() {
-    const users = await this.usersService.findAllUsers();
+  async findAllUsers(@Query() findUsersDto: FindUsersDto) {
+    const users = await this.usersService.findAllUsers(findUsersDto);
 
     return {
       message: 'All the users were successfully fetched',
