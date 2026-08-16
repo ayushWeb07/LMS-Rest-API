@@ -28,14 +28,6 @@ import { FindPostsDto } from './dtos/find-posts.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  /** Find posts of one user */
-  // @Get(':userId')
-  // findPosts(@Param('userId') userId: string) {
-  //   return {
-  //     message: this.postsService.findPosts(userId),
-  //   };
-  // }
-
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
