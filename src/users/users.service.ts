@@ -65,7 +65,7 @@ export class UsersService {
         existingUser.username === createUserDto.username
       ) {
         throw new BadRequestException(
-          `User with such email and username already exists`,
+          `User with email '${createUserDto.email}' and username '${createUserDto.username}' already exists`,
         );
       } else if (existingUser.email === createUserDto.email) {
         throw new BadRequestException(
