@@ -10,6 +10,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  Generated,
 } from 'typeorm';
 import { PostTypeEnum } from './enums/post-type.enum';
 import { PostStatusEnum } from './enums/post-status.enum';
@@ -41,27 +42,14 @@ export class Post {
 
   @Column({
     name: 'slug',
-    type: 'varchar',
-    length: 10,
-    nullable: false,
-    unique: true,
     comment: 'Slug of the post',
   })
+  @Generated('uuid')
   slug: string;
 
   @Column({
-    name: 'schema',
-    type: 'varchar',
-    length: 50,
-    nullable: false,
-    comment: 'Schema of the post',
-  })
-  schema: string;
-
-  @Column({
     name: 'thumbnail_url',
-    type: 'varchar',
-    length: 255,
+    type: 'text',
     nullable: false,
     comment: 'Thumbnail url of the post',
   })
@@ -92,24 +80,6 @@ export class Post {
   })
   metaOption: MetaOption;
 
-  @CreateDateColumn({
-    name: 'created_at',
-    comment: 'Last creation date of the post',
-  })
-  createdAt: Date;
-
-  @UpdateDateColumn({
-    name: 'updated_at',
-    comment: 'Last updation date of the post',
-  })
-  updatedAt: Date;
-
-  @DeleteDateColumn({
-    name: 'deleted_at',
-    comment: 'Last deletion date of the post',
-  })
-  deletedAt: Date;
-
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
   })
@@ -129,4 +99,22 @@ export class Post {
     },
   })
   tags: Tag[];
+
+  @CreateDateColumn({
+    name: 'created_at',
+    comment: 'Last creation date of the post',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    comment: 'Last updation date of the post',
+  })
+  updatedAt: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    comment: 'Last deletion date of the post',
+  })
+  deletedAt: Date;
 }

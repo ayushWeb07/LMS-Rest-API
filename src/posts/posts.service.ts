@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
@@ -10,6 +16,7 @@ import { DeletePostDto } from './dtos/delete-post.dto';
 import { MetaOption } from '../meta-options/meta-option.entity';
 import { TagsService } from '../tags/tags.service';
 import { Tag } from '../tags/tag.entity';
+import { User } from '../users/user.entity';
 
 /** This is the Posts service */
 @Injectable()
@@ -27,18 +34,28 @@ export class PostsService {
     private metaOptionRepository: Repository<MetaOption>,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto): Promise<Post | null> {
+  async createPost(createPostDto: CreatePostDto): Promise<Post> {
     // find the user
     const user = await this.usersService.findUserById({
       id: createPostDto.authorId,
     });
 
-    if (!user) return null;
+    if (!user) {
+      throw new NotFoundException(
+        `Author with id '${createPostDto.authorId}' does not exist`,
+      );
+    }
 
     // find the tags
     const tags = await this.tagsService.findMultipleTags({
       tagIds: createPostDto.tagIds,
     });
+
+    if (tags.length !== createPostDto.tagIds.length) {
+      throw new BadRequestException(
+        `Found one or more invalid tags on the post`,
+      );
+    }
 
     // create the post instance
     let newPost = this.postRepository.create({
@@ -63,7 +80,8 @@ export class PostsService {
     return posts;
   }
 
-  async findPostById(findPostByIdDto: FindPostByIdDto): Promise<Post | null> {
+  async findPostById(findPostByIdDto: FindPostByIdDto): Promise<Post> {
+    // find the post by id
     const post = await this.postRepository.findOne({
       where: {
         id: findPostByIdDto.id,
@@ -75,10 +93,16 @@ export class PostsService {
       },
     });
 
+    if (!post) {
+      throw new NotFoundException(
+        `Post with id '${findPostByIdDto.id}' does not exist`,
+      );
+    }
+
     return post;
   }
 
-  async patchPost(patchPostDto: PatchPostDto): Promise<boolean> {
+  async patchPost(patchPostDto: PatchPostDto): Promise<void> {
     // find the post
     const post = await this.postRepository.findOne({
       where: {
@@ -86,39 +110,64 @@ export class PostsService {
       },
       relations: {
         tags: true,
+        author: true,
       },
     });
 
     if (!post) {
-      return false;
+      throw new NotFoundException(
+        `Post with id '${patchPostDto.id}' does not exist`,
+      );
     }
 
-    // find the tags
+    // check if author is updated
+    let updatedAuthor: User | null = null;
+
+    if (patchPostDto.authorId) {
+      updatedAuthor = await this.usersService.findUserById({
+        id: patchPostDto.authorId,
+      });
+
+      if (!updatedAuthor) {
+        throw new NotFoundException(
+          `Author with id '${patchPostDto.authorId}' does not exist`,
+        );
+      }
+    }
+
+    // check if tags got updated
     let updatedTags: Tag[] = [];
 
     if (patchPostDto.tagIds) {
       updatedTags = await this.tagsService.findMultipleTags({
         tagIds: patchPostDto.tagIds,
       });
+
+      if (updatedTags.length !== patchPostDto.tagIds.length) {
+        throw new BadRequestException(
+          `Found one or more invalid tags on the post`,
+        );
+      }
     }
 
     // update the post properties
     post.title = patchPostDto.title ?? post.title;
     post.content = patchPostDto.content ?? post.content;
-    post.slug = patchPostDto.slug ?? post.slug;
-    post.schema = patchPostDto.schema ?? post.schema;
     post.thumbnailUrl = patchPostDto.thumbnailUrl ?? post.thumbnailUrl;
     post.postType = patchPostDto.postType ?? post.postType;
     post.postStatus = patchPostDto.postStatus ?? post.postStatus;
 
+    // update the author
+    post.author = updatedAuthor ?? post.author;
+
     // update the tags on post
     post.tags = updatedTags.length > 0 ? updatedTags : post.tags;
 
+    // update the post
     await this.postRepository.save(post);
-    return true;
   }
 
-  async deletePost(deletePostDto: DeletePostDto): Promise<boolean> {
+  async deletePost(deletePostDto: DeletePostDto): Promise<void> {
     // find the post
     const post = await this.postRepository.findOne({
       where: {
@@ -126,14 +175,16 @@ export class PostsService {
       },
     });
 
-    if (!post) return false;
+    if (!post) {
+      throw new NotFoundException(
+        `Post with id '${deletePostDto.id}' does not exist`,
+      );
+    }
 
     // delete the post
     await this.postRepository.delete({
       id: deletePostDto.id,
     });
-
-    return true;
   }
 
   findPosts(userId: string): string {
