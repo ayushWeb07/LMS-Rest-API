@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { LoginDto, RegisterDto } from './auth.dto';
-import { FindAllDto, FindOneDto } from '../users/users.dto';
+import { UsersService } from '../../users/services/users.service';
+import { LoginDto, RegisterDto } from '../auth.dto';
+import { FindAllDto, FindOneDto } from '../../users/users.dto';
 
 /** This is the Auth service */
 @Injectable()
