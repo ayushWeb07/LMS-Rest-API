@@ -57,10 +57,12 @@ export class BulkCreateUsersService {
             throw new BadRequestException(
               `Email '${userDto.email}' already in use`,
             );
-          } else {
+          } else if (existingUsernames.includes(userDto.username)) {
             throw new BadRequestException(
               `Username '${userDto.username}' already taken`,
             );
+          } else {
+            continue;
           }
         }
       }
