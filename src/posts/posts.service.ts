@@ -17,6 +17,7 @@ import { MetaOption } from '../meta-options/meta-option.entity';
 import { TagsService } from '../tags/tags.service';
 import { Tag } from '../tags/tag.entity';
 import { User } from '../users/user.entity';
+import { FindPostsDto } from './dtos/find-posts.dto';
 
 /** This is the Posts service */
 @Injectable()
@@ -69,13 +70,15 @@ export class PostsService {
     return newPost;
   }
 
-  async findAllPosts(): Promise<Post[]> {
+  async findAllPosts(findPostsDto: FindPostsDto): Promise<Post[]> {
     const posts = await this.postRepository.find({
       relations: {
         metaOption: true,
         author: true,
         tags: true,
       },
+      take: findPostsDto.limit,
+      skip: (findPostsDto.page - 1) * findPostsDto.limit,
     });
     return posts;
   }

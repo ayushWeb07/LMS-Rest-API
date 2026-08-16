@@ -21,6 +21,7 @@ import { FindUserByEmailAndUsernameDto } from './dtos/find-user-by-email-and-use
 import { UserConflictEnum } from './enums/user-conflict.enum';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { BulkCreateUsersService } from './bulk-create-users.service';
+import { FindUsersDto } from './dtos/find-users.dto';
 
 /** This is the Users service */
 @Injectable()
@@ -84,9 +85,12 @@ export class UsersService {
     return newUser;
   }
 
-  async findAllUsers(): Promise<User[]> {
+  async findAllUsers(findUsersDto: FindUsersDto): Promise<User[]> {
     // find all the users
-    const users = await this.usersRepository.find();
+    const users = await this.usersRepository.find({
+      take: findUsersDto.limit,
+      skip: (findUsersDto.page - 1) * findUsersDto.limit,
+    });
     return users;
   }
 
