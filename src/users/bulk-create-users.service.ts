@@ -1,5 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
+import { DataSource, In } from 'typeorm';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { User } from './user.entity';
 
@@ -13,32 +17,43 @@ export class BulkCreateUsersService {
     const queryRunner = this.datasource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-    const createdUsers: User[] = [];
+    let createdUsers: User[] = [];
 
     try {
-      // iterate over all the users
-      for (const userDto of bulkCreateUsersDto.users) {
-        // find the user by email and username
-        const existingUser = await queryRunner.manager.findOne(User, {
-          where: [
-            {
-              email: userDto.email,
-            },
-            {
-              username: userDto.username,
-            },
-          ],
-        });
+      // store all the emails of the users to be bulk created
+      const emailsToBeCreated: string[] = bulkCreateUsersDto.users.map(
+        (user) => user.email,
+      );
+      const usernamesToBeCreated: string[] = bulkCreateUsersDto.users.map(
+        (user) => user.username,
+      );
 
-        if (existingUser) {
+      // find the users by email and username
+      const existingUsers: User[] = await queryRunner.manager.find(User, {
+        where: [
+          {
+            email: In(emailsToBeCreated),
+          },
+          {
+            username: In(usernamesToBeCreated),
+          },
+        ],
+      });
+
+      if (existingUsers.length > 0) {
+        // get the existing emails and usernames
+        const existingEmails = existingUsers.map((user) => user.email);
+        const existingUsernames = existingUsers.map((user) => user.username);
+
+        for (const userDto of bulkCreateUsersDto.users) {
           if (
-            existingUser.email === userDto.email &&
-            existingUser.username === userDto.username
+            existingEmails.includes(userDto.email) &&
+            existingUsernames.includes(userDto.username)
           ) {
             throw new BadRequestException(
-              `User with such email and username already exists`,
+              `User with email '${userDto.email}' and username '${userDto.username}' already exists`,
             );
-          } else if (existingUser.email === userDto.email) {
+          } else if (existingEmails.includes(userDto.email)) {
             throw new BadRequestException(
               `Email '${userDto.email}' already in use`,
             );
@@ -48,14 +63,16 @@ export class BulkCreateUsersService {
             );
           }
         }
-
-        // create a new user and save it
-        let newUser = queryRunner.manager.create(User, userDto);
-        newUser = await queryRunner.manager.save(newUser);
-
-        createdUsers.push(newUser);
       }
 
+      // bulk create the users and save them
+      let newUsers: User[] = queryRunner.manager.create(
+        User,
+        bulkCreateUsersDto.users,
+      );
+      newUsers = await queryRunner.manager.save(newUsers);
+
+      createdUsers = newUsers;
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();

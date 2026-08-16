@@ -12,7 +12,7 @@ import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
