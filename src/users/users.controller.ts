@@ -17,6 +17,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
+import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 
 /** This is the Users controller */
 @Controller('users')
@@ -31,6 +32,17 @@ export class UsersController {
     return {
       message: 'User successfully created',
       user,
+    };
+  }
+
+  @Post('bulk')
+  @HttpCode(HttpStatus.CREATED)
+  async bulkCreateUsers(@Body() bulkCreateUsersDto: BulkCreateUsersDto) {
+    const users = await this.usersService.bulkCreateUsers(bulkCreateUsersDto);
+
+    return {
+      message: 'Users successfully bulk created',
+      users,
     };
   }
 

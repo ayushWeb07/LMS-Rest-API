@@ -19,6 +19,8 @@ import { DeleteUserDto } from './dtos/delete-user.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { FindUserByEmailAndUsernameDto } from './dtos/find-user-by-email-and-username.dto';
 import { UserConflictEnum } from './enums/user-conflict.enum';
+import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
+import { BulkCreateUsersService } from './bulk-create-users.service';
 
 /** This is the Users service */
 @Injectable()
@@ -26,12 +28,23 @@ export class UsersService {
   constructor(
     private readonly configService: ConfigService,
 
+    private readonly bulkCreateUsersService: BulkCreateUsersService,
+
     @Inject(forwardRef(() => PostsService))
     private readonly postsService: PostsService,
 
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  async bulkCreateUsers(
+    bulkCreateUsersDto: BulkCreateUsersDto,
+  ): Promise<User[]> {
+    const users =
+      await this.bulkCreateUsersService.bulkCreateUsers(bulkCreateUsersDto);
+
+    return users;
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     // find the user by email and username
@@ -52,7 +65,7 @@ export class UsersService {
         existingUser.username === createUserDto.username
       ) {
         throw new BadRequestException(
-          `User with such email and username already exists`,
+          `User with email '${createUserDto.email}' and username '${createUserDto.username}' already exists`,
         );
       } else if (existingUser.email === createUserDto.email) {
         throw new BadRequestException(
