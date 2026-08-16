@@ -77,6 +77,8 @@ export class PostsService {
         author: true,
         tags: true,
       },
+      take: findPostsDto.limit,
+      skip: (findPostsDto.page - 1) * findPostsDto.limit,
     });
     return posts;
   }
