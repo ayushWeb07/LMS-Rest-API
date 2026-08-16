@@ -4,11 +4,11 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -21,6 +21,7 @@ import {
 import { PatchPostDto } from './dtos/patch-post.dto';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
+import { FindPostsDto } from './dtos/find-posts.dto';
 
 /** This is the Posts controller */
 @Controller('posts')
@@ -58,8 +59,8 @@ export class PostsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAllPosts() {
-    const posts = await this.postsService.findAllPosts();
+  async findAllPosts(@Query() findPostsDto: FindPostsDto) {
+    const posts = await this.postsService.findAllPosts(findPostsDto);
     return {
       message: 'All the posts successfully fetched',
       posts,
