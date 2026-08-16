@@ -51,9 +51,9 @@ export class PostsService {
       tagIds: createPostDto.tagIds,
     });
 
-    if (tags.length === 0) {
+    if (tags.length !== createPostDto.tagIds.length) {
       throw new BadRequestException(
-        `Atleast one valid tag must be given to the post`,
+        `Found one or more invalid tags on the post`,
       );
     }
 
@@ -124,17 +124,15 @@ export class PostsService {
     let updatedAuthor: User | null = null;
 
     if (patchPostDto.authorId) {
-      const user = await this.usersService.findUserById({
+      updatedAuthor = await this.usersService.findUserById({
         id: patchPostDto.authorId,
       });
 
-      if (!user) {
+      if (!updatedAuthor) {
         throw new NotFoundException(
           `Author with id '${patchPostDto.authorId}' does not exist`,
         );
       }
-
-      updatedAuthor = user;
     }
 
     // check if tags got updated
@@ -145,9 +143,9 @@ export class PostsService {
         tagIds: patchPostDto.tagIds,
       });
 
-      if (updatedTags.length === 0) {
+      if (updatedTags.length !== patchPostDto.tagIds.length) {
         throw new BadRequestException(
-          `Atleast one valid tag must be given to the post`,
+          `Found one or more invalid tags on the post`,
         );
       }
     }
