@@ -6,22 +6,22 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from '../config/interfaces/database_config.interface';
-import { ServerConfig } from '../config/interfaces/server_config.interface';
-import { FindAllDto, FindOneDto } from './users.dto';
-import { PostsService } from '../posts/posts.service';
+import { DatabaseConfig } from '../../config/interfaces/database_config.interface';
+import { ServerConfig } from '../../config/interfaces/server_config.interface';
+import { FindAllDto, FindOneDto } from '../users.dto';
+import { PostsService } from '../../posts/posts.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
-import { DeleteUserDto } from './dtos/delete-user.dto';
-import { PatchUserDto } from './dtos/patch-user.dto';
-import { FindUserByEmailAndUsernameDto } from './dtos/find-user-by-email-and-username.dto';
-import { UserConflictEnum } from './enums/user-conflict.enum';
-import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
+import { DeleteUserDto } from '../dtos/delete-user.dto';
+import { PatchUserDto } from '../dtos/patch-user.dto';
+import { FindUserByEmailAndUsernameDto } from '../dtos/find-user-by-email-and-username.dto';
+import { UserConflictEnum } from '../enums/user-conflict.enum';
+import { BulkCreateUsersDto } from '../dtos/bulk-create-users.dto';
 import { BulkCreateUsersService } from './bulk-create-users.service';
-import { FindUsersDto } from './dtos/find-users.dto';
+import { FindUsersDto } from '../dtos/find-users.dto';
 
 /** This is the Users service */
 @Injectable()

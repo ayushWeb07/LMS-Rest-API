@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './services/users.service';
 import { FindAllDto, FindOneDto } from './users.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateUserDto } from './dtos/create-user.dto';

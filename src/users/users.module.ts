@@ -1,10 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersService } from './services/users.service';
 import { PostsModule } from '../posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { BulkCreateUsersService } from './bulk-create-users.service';
+import { BulkCreateUsersService } from './services/bulk-create-users.service';
 
 @Module({
   controllers: [UsersController],

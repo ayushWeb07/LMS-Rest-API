@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, In } from 'typeorm';
-import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
-import { User } from './user.entity';
+import { BulkCreateUsersDto } from '../dtos/bulk-create-users.dto';
+import { User } from '../user.entity';
 
 @Injectable()
 export class BulkCreateUsersService {
