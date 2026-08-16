@@ -12,13 +12,14 @@ import { FindAllDto, FindOneDto } from './users.dto';
 import { PostsService } from '../posts/posts.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
 import { FindUserByEmailAndUsernameDto } from './dtos/find-user-by-email-and-username.dto';
 import { UserConflictEnum } from './enums/user-conflict.enum';
+import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 
 /** This is the Users service */
 @Injectable()
@@ -26,12 +27,73 @@ export class UsersService {
   constructor(
     private readonly configService: ConfigService,
 
+    private readonly datasource: DataSource,
+
     @Inject(forwardRef(() => PostsService))
     private readonly postsService: PostsService,
 
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  async bulkCreateUsers(bulkCreateUsersDto: BulkCreateUsersDto) {
+    const queryRunner = this.datasource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    let createdUsers: User[] = [];
+
+    try {
+      // iterate over all the users
+      for (const user of bulkCreateUsersDto.users) {
+        // find the user by email and username
+        const existingUser = await this.usersRepository.findOne({
+          where: [
+            {
+              email: user.email,
+            },
+            {
+              username: user.username,
+            },
+          ],
+        });
+
+        if (existingUser) {
+          if (
+            existingUser.email === user.email &&
+            existingUser.username === user.username
+          ) {
+            throw new BadRequestException(
+              `User with such email and username already exists`,
+            );
+          } else if (existingUser.email === user.email) {
+            throw new BadRequestException(
+              `Email '${user.email}' already in use`,
+            );
+          } else {
+            throw new BadRequestException(
+              `Username '${user.username}' already taken`,
+            );
+          }
+        }
+
+        // create a new user and save it
+        let newUser = this.usersRepository.create(user);
+        newUser = await this.usersRepository.save(newUser);
+
+        createdUsers.push(newUser);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+
+    return createdUsers;
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     // find the user by email and username
