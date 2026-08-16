@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { MetaOptionsService } from './meta-options.service';
+import { MetaOptionsService } from './services/meta-options.service';
 import { CreateMetaOptionDto } from './dtos/create-meta-option.dto';
 
 @Controller('meta-options')
