@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
-import { LoginDto, RegisterDto } from './auth.dto';
-import { FindAllDto, FindOneDto } from '../users/users.dto';
+import { RegisterAuthDto } from './dtos/register-auth.dto';
+import { LoginAuthDto } from './dtos/login-auth.dto';
 
 /** This is the Auth controller */
 @Controller('auth')
@@ -9,27 +9,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  register(@Body() registerDto: RegisterDto) {
+  register(@Body() registerDto: RegisterAuthDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
+  login(@Body() loginDto: LoginAuthDto) {
     return this.authService.login(loginDto);
-  }
-
-  @Get('create')
-  create() {
-    return this.authService.create();
-  }
-
-  @Get('findAll')
-  findAll(@Query() findAllDto: FindAllDto) {
-    return this.authService.findAll(findAllDto);
-  }
-
-  @Get('findOne/:id')
-  findOne(@Param() findOneDto: FindOneDto) {
-    return this.authService.findOne(findOneDto);
   }
 }
