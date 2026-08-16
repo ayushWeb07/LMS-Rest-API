@@ -4,13 +4,12 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { TagsService } from './tags.service';
+import { TagsService } from './services/tags.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
 import { DeleteTagDto } from './dtos/delete-tag.dto';

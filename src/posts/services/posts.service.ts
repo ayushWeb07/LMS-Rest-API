@@ -5,19 +5,19 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { CreatePostDto } from './dtos/create-post.dto';
-import { PatchPostDto } from './dtos/patch-post.dto';
+import { UsersService } from '../../users/services/users.service';
+import { CreatePostDto } from '../dtos/create-post.dto';
+import { PatchPostDto } from '../dtos/patch-post.dto';
 import { Repository } from 'typeorm';
-import { Post } from './post.entity';
+import { Post } from '../post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
-import { DeletePostDto } from './dtos/delete-post.dto';
-import { MetaOption } from '../meta-options/meta-option.entity';
-import { TagsService } from '../tags/tags.service';
-import { Tag } from '../tags/tag.entity';
-import { User } from '../users/user.entity';
-import { FindPostsDto } from './dtos/find-posts.dto';
+import { FindPostByIdDto } from '../dtos/find-post-by-id.dto';
+import { DeletePostDto } from '../dtos/delete-post.dto';
+import { MetaOption } from '../../meta-options/meta-option.entity';
+import { TagsService } from '../../tags/services/tags.service';
+import { Tag } from '../../tags/tag.entity';
+import { User } from '../../users/user.entity';
+import { FindPostsDto } from '../dtos/find-posts.dto';
 
 /** This is the Posts service */
 @Injectable()
