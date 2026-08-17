@@ -24,9 +24,11 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(8)
-  @MaxLength(8)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8}$/)
+  @MinLength(60)
+  @MaxLength(60)
+  @Matches(/^\$2[aby]?\$\d{2}\$[./A-Za-z0-9]{53}$/, {
+    message: 'Not a valid bcrypt hash',
+  })
   password: string;
 
   @IsOptional()

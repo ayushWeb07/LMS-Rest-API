@@ -1,49 +1,41 @@
 import {
+  IsBoolean,
   IsEmail,
-  IsIn,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
-  Length,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
 } from 'class-validator';
 
 export class RegisterAuthDto {
-  /** Username */
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
-  @MaxLength(15)
+  @MinLength(10)
+  @MaxLength(25)
   username: string;
 
-  /** Email */
   @IsString()
   @IsNotEmpty()
   @IsEmail()
+  @MaxLength(25)
   email: string;
 
-  /** Password */
   @IsString()
   @IsNotEmpty()
-  @Length(8)
-  @Matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$')
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    {
+      message:
+        'Password must have atleast 1 uppercase, 1 lowercase, 1 number and 1 special character',
+    },
+  )
   password: string;
 
-  /** Age */
-  @IsInt()
   @IsOptional()
-  @Min(18)
-  @Max(100)
-  age?: number;
-
-  /** Sex */
-  @IsString()
-  @IsOptional()
-  @IsIn(['male', 'female'])
-  sex?: string;
+  @IsBoolean()
+  isVerified?: boolean;
 }
