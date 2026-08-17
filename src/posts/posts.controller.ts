@@ -10,7 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { PostsService } from './services/posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
 import {
   ApiBadRequestResponse,
@@ -27,14 +27,6 @@ import { FindPostsDto } from './dtos/find-posts.dto';
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
-
-  /** Find posts of one user */
-  // @Get(':userId')
-  // findPosts(@Param('userId') userId: string) {
-  //   return {
-  //     message: this.postsService.findPosts(userId),
-  //   };
-  // }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

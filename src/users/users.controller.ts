@@ -10,9 +10,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { FindAllDto, FindOneDto } from './users.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { UsersService } from './services/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
@@ -89,31 +87,5 @@ export class UsersController {
     return {
       message: `User with id '${deleteUserDto.id}' got successfully deleted`,
     };
-  }
-
-  @Post('keys')
-  getKeys() {
-    return this.usersService.getKeys();
-  }
-
-  @Get('create')
-  create() {
-    return this.usersService.create();
-  }
-
-  @Get('findAll')
-  @ApiOperation({
-    summary: 'This endpoint fetches all the users',
-  })
-  findAll(@Query() findAllDto: FindAllDto) {
-    return this.usersService.findAll(findAllDto);
-  }
-
-  @Get('findOne/:id')
-  @ApiOperation({
-    summary: 'This endpoint fetches the users by id',
-  })
-  findOne(@Param() findOneDto: FindOneDto) {
-    return this.usersService.findOne(findOneDto);
   }
 }

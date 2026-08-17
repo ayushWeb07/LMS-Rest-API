@@ -9,7 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateUserDto {
+export class RegisterAuthDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(10)
@@ -24,11 +24,15 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(60)
-  @MaxLength(60)
-  @Matches(/^\$2[aby]?\$\d{2}\$[./A-Za-z0-9]{53}$/, {
-    message: 'Not a valid bcrypt hash',
-  })
+  @MinLength(8)
+  @MaxLength(15)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    {
+      message:
+        'Password must have atleast 1 uppercase, 1 lowercase, 1 number and 1 special character',
+    },
+  )
   password: string;
 
   @IsOptional()

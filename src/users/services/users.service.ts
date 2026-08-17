@@ -1,38 +1,27 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from '../config/interfaces/database_config.interface';
-import { ServerConfig } from '../config/interfaces/server_config.interface';
-import { FindAllDto, FindOneDto } from './users.dto';
-import { PostsService } from '../posts/posts.service';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
-import { DeleteUserDto } from './dtos/delete-user.dto';
-import { PatchUserDto } from './dtos/patch-user.dto';
-import { FindUserByEmailAndUsernameDto } from './dtos/find-user-by-email-and-username.dto';
-import { UserConflictEnum } from './enums/user-conflict.enum';
-import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
+import { DeleteUserDto } from '../dtos/delete-user.dto';
+import { PatchUserDto } from '../dtos/patch-user.dto';
+import { FindUserByEmailAndUsernameDto } from '../dtos/find-user-by-email-and-username.dto';
+import { UserConflictEnum } from '../enums/user-conflict.enum';
+import { BulkCreateUsersDto } from '../dtos/bulk-create-users.dto';
 import { BulkCreateUsersService } from './bulk-create-users.service';
-import { FindUsersDto } from './dtos/find-users.dto';
+import { FindUsersDto } from '../dtos/find-users.dto';
+import { FindUserByEmailDto } from '../dtos/find-user-by-email.dto';
 
 /** This is the Users service */
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly configService: ConfigService,
-
     private readonly bulkCreateUsersService: BulkCreateUsersService,
-
-    @Inject(forwardRef(() => PostsService))
-    private readonly postsService: PostsService,
 
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -104,6 +93,22 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(
         `User with id '${findUserByIdDto.id}' does not exist`,
+      );
+    }
+
+    return user;
+  }
+
+  async findUserByEmail(findUserByEmailDto: FindUserByEmailDto): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: findUserByEmailDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with email '${findUserByEmailDto.email}' does not exist`,
       );
     }
 
@@ -211,50 +216,5 @@ export class UsersService {
     await this.usersRepository.delete({
       id: deleteUserDto.id,
     });
-  }
-
-  getKeys() {
-    // create the database config
-    const databaseConfig = this.configService.get<DatabaseConfig>('database');
-
-    // create the server config
-    const serverConfig = this.configService.get<ServerConfig>('server');
-
-    return {
-      status: 'ok',
-      message: 'users - get keys',
-      databaseConfig,
-      serverConfig,
-    };
-  }
-
-  create() {
-    return {
-      status: 'ok',
-      message: 'users - create',
-    };
-  }
-
-  findAll(findAllDto: FindAllDto) {
-    return {
-      status: 'ok',
-      message: 'users - findAll',
-      findAllDto,
-    };
-  }
-
-  findOneForPost(userId: string): boolean {
-    return userId.length > 5;
-  }
-
-  findOne(findOneDto: FindOneDto) {
-    return {
-      status: 'ok',
-      message: `users - findOne - ${findOneDto.id}`,
-    };
-  }
-
-  findAllPostsOfUser() {
-    return this.postsService.findAllPostsOfUser();
   }
 }

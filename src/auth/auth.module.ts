@@ -1,11 +1,42 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { UsersModule } from '../users/users.module';
+import { HashingService } from './services/hashing.service';
+import { BcryptService } from './services/bcrypt.service';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { ServerConfig } from '../config/interfaces/server_config.interface';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
-  imports: [UsersModule],
+  providers: [
+    AuthService,
+    {
+      provide: HashingService,
+      useClass: BcryptService,
+    },
+  ],
+  imports: [
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        // get the server config
+        const serverConfig = configService.get<ServerConfig>('server');
+
+        if (!serverConfig) {
+          throw new Error('Server configuration must be setup');
+        }
+
+        return {
+          secret: serverConfig.jwtSecretKey,
+          signOptions: {
+            expiresIn: serverConfig.jwtExpires,
+          },
+        };
+      },
+    }),
+    UsersModule,
+  ],
 })
 export class AuthModule {}
