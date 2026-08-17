@@ -5,4 +5,8 @@ export interface ServerConfig {
 
   /** The node env */
   env: string;
+
+  jwtSecretKey: string;
+
+  jwtExpires: string;
 }
