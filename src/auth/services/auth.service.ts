@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../../users/services/users.service';
 import { RegisterAuthDto } from '../dtos/register-auth.dto';
 import { LoginAuthDto } from '../dtos/login-auth.dto';
@@ -13,24 +17,37 @@ export class AuthService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async registerAuth(registerDto: RegisterAuthDto): Promise<User> {
+  async registerAuth(registerAuthDto: RegisterAuthDto): Promise<User> {
     // hash the password
     const passwordHash = await this.hashingService.hashPassword(
-      registerDto.password,
+      registerAuthDto.password,
     );
 
-    registerDto.password = passwordHash;
+    registerAuthDto.password = passwordHash;
 
     // call the users service
-    const user = await this.usersService.createUser(registerDto);
+    const user = await this.usersService.createUser(registerAuthDto);
     return user;
   }
 
-  loginAuth(loginDto: LoginAuthDto) {
-    return {
-      status: 'ok',
-      message: 'Login auth endpoint',
-      payload: loginDto,
-    };
+  async loginAuth(loginAuthDto: LoginAuthDto): Promise<User> {
+    // find the user by email
+    const user = await this.usersService.findUserByEmail({
+      email: loginAuthDto.email,
+    });
+
+    // compare passwords
+    const isPasswordsMatch = await this.hashingService.comparePasswords(
+      loginAuthDto.password,
+      user.password,
+    );
+
+    if (!isPasswordsMatch) {
+      throw new UnauthorizedException(
+        `Incorrect credentials has been provided`,
+      );
+    }
+
+    return user;
   }
 }

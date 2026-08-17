@@ -15,6 +15,7 @@ import { UserConflictEnum } from '../enums/user-conflict.enum';
 import { BulkCreateUsersDto } from '../dtos/bulk-create-users.dto';
 import { BulkCreateUsersService } from './bulk-create-users.service';
 import { FindUsersDto } from '../dtos/find-users.dto';
+import { FindUserByEmailDto } from '../dtos/find-user-by-email.dto';
 
 /** This is the Users service */
 @Injectable()
@@ -92,6 +93,22 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(
         `User with id '${findUserByIdDto.id}' does not exist`,
+      );
+    }
+
+    return user;
+  }
+
+  async findUserByEmail(findUserByEmailDto: FindUserByEmailDto): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email: findUserByEmailDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(
+        `User with email '${findUserByEmailDto.email}' does not exist`,
       );
     }
 

@@ -10,8 +10,8 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async registerAuth(@Body() registerDto: RegisterAuthDto) {
-    const user = await this.authService.registerAuth(registerDto);
+  async registerAuth(@Body() registerAuthDto: RegisterAuthDto) {
+    const user = await this.authService.registerAuth(registerAuthDto);
 
     return {
       message: 'User successfully registered',
@@ -20,7 +20,13 @@ export class AuthController {
   }
 
   @Post('login')
-  loginAuth(@Body() loginDto: LoginAuthDto) {
-    return this.authService.loginAuth(loginDto);
+  @HttpCode(HttpStatus.OK)
+  async loginAuth(@Body() loginAuthDto: LoginAuthDto) {
+    const user = await this.authService.loginAuth(loginAuthDto);
+
+    return {
+      message: 'User successfully logged in',
+      user,
+    };
   }
 }

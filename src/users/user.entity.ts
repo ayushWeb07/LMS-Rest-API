@@ -37,7 +37,7 @@ export class User {
   @Column({
     name: 'password',
     type: 'varchar',
-    length: 8,
+    length: 60,
     nullable: false,
     comment: 'Password of the user',
   })
