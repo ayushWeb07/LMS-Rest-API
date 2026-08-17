@@ -4,6 +4,7 @@ import { RegisterAuthDto } from '../dtos/register-auth.dto';
 import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { HashingService } from './hashing.service';
 import { User } from '../../users/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 /** This is the Auth service */
 @Injectable()
@@ -11,6 +12,7 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly hashingService: HashingService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async registerAuth(registerAuthDto: RegisterAuthDto): Promise<User> {
@@ -26,7 +28,7 @@ export class AuthService {
     return user;
   }
 
-  async loginAuth(loginAuthDto: LoginAuthDto): Promise<User> {
+  async loginAuth(loginAuthDto: LoginAuthDto): Promise<string> {
     // find the user by email
     const user = await this.usersService.findUserByEmail({
       email: loginAuthDto.email,
@@ -44,6 +46,12 @@ export class AuthService {
       );
     }
 
-    return user;
+    // generate tokens
+    const token = await this.jwtService.signAsync({
+      id: user.id,
+      email: user.email,
+    });
+
+    return token;
   }
 }
