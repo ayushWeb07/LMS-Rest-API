@@ -8,11 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IJwtAuthResponse } from '../../interfaces/jwt-auth-response.interface';
 
-interface JwtResponse {
-  id: string;
-  email: string;
-}
-
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
@@ -30,9 +25,16 @@ export class AccessTokenGuard implements CanActivate {
       );
     }
 
-    // verify the token
+    // extract the token
     const token = authHeader.split(' ')[1];
 
+    if (!token) {
+      throw new UnauthorizedException(
+        'Access denied: Invalid token has been provided',
+      );
+    }
+
+    // verify the token
     try {
       const payload: IJwtAuthResponse =
         await this.jwtService.verifyAsync(token);
@@ -46,8 +48,6 @@ export class AccessTokenGuard implements CanActivate {
       );
     }
 
-    if (!token) {
-      throw new UnauthorizedException();
-    }
+    return true;
   }
 }
