@@ -5,6 +5,8 @@ import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { HashingService } from './hashing.service';
 import { User } from '../../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { FindUserByIdDto } from '../../users/dtos/find-user-by-id.dto';
+import { GetProfileAuthDto } from '../dtos/get-profile-auth.dto';
 
 /** This is the Auth service */
 @Injectable()
@@ -53,5 +55,13 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async getProfile(getProfileAuthDto: GetProfileAuthDto): Promise<User> {
+    const user = await this.usersService.findUserById({
+      id: getProfileAuthDto.id,
+    });
+
+    return user;
   }
 }

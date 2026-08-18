@@ -1,4 +1,4 @@
 export interface IJwtAuthResponse {
-  userId: string;
+  userId: number;
   userEmail: string;
 }

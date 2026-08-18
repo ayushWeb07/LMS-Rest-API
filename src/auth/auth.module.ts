@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './services/auth.service';
-import { UsersModule } from '../users/users.module';
 import { HashingService } from './services/hashing.service';
 import { BcryptService } from './services/bcrypt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ServerConfig } from '../config/interfaces/server_config.interface';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   controllers: [AuthController],

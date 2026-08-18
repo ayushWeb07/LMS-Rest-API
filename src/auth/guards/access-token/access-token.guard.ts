@@ -19,9 +19,16 @@ export class AccessTokenGuard implements CanActivate {
     // get the token from headers
     const authHeader = request.headers['authorization'];
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader) {
       throw new UnauthorizedException(
-        'Access denied: Invalid token has been provided',
+        'Access denied: No token has been provided',
+      );
+    }
+
+    // check if starts with bearer
+    if (!authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException(
+        'Access denied: Token must be in bearer format',
       );
     }
 
@@ -44,7 +51,7 @@ export class AccessTokenGuard implements CanActivate {
       request.userEmail = payload.userEmail;
     } catch {
       throw new UnauthorizedException(
-        'Access denied: Invalid token has been provided',
+        'Access denied: Invalid or expired token has been provided',
       );
     }
 

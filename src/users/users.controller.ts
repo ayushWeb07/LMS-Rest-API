@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './services/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -17,6 +18,7 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { FindUsersDto } from './dtos/find-users.dto';
+import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
 
 /** This is the Users controller */
 @Controller('users')
@@ -45,6 +47,7 @@ export class UsersController {
     };
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllUsers(@Query() findUsersDto: FindUsersDto) {
