@@ -17,7 +17,7 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { FindUsersDto } from './dtos/find-users.dto';
-import { Public } from '../auth/guards/access-token/skip-access-token.guard';
+import { IsPublic } from '../auth/decorators/skip-access-token.decorator';
 
 /** This is the Users controller */
 @Controller('users')
@@ -46,7 +46,7 @@ export class UsersController {
     };
   }
 
-  @Public()
+  @IsPublic()
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllUsers(@Query() findUsersDto: FindUsersDto) {
@@ -58,7 +58,7 @@ export class UsersController {
     };
   }
 
-  @Public()
+  @IsPublic()
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findUserById(@Param() findUserByIdDto: FindUserByIdDto) {

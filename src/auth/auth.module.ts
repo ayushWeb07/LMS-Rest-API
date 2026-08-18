@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import type { IServerConfig } from '../config/interfaces/server_config.interface';
 import { UsersModule } from '../users/users.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './guards/access-token/access-token.guard';
+import { AccessTokenGuard } from './guards/access-token.guard';
 
 @Module({
   controllers: [AuthController],

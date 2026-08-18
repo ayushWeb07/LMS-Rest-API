@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import type { IJwtAuthResponse } from '../../interfaces/jwt-auth-response.interface';
-import { IS_PUBLIC_KEY } from './skip-access-token.guard';
+import type { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
+import { IS_PUBLIC_KEY } from '../constants/auth.constants';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
