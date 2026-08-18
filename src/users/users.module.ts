@@ -6,7 +6,7 @@ import { User } from './user.entity';
 import { BulkCreateUsersService } from './services/bulk-create-users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ServerConfig } from '../config/interfaces/server_config.interface';
+import type { IServerConfig } from '../config/interfaces/server_config.interface';
 
 @Module({
   controllers: [UsersController],
@@ -18,7 +18,7 @@ import { ServerConfig } from '../config/interfaces/server_config.interface';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         // get the server config
-        const serverConfig = configService.get<ServerConfig>('server');
+        const serverConfig = configService.get<IServerConfig>('server');
 
         if (!serverConfig) {
           throw new Error('Server configuration must be setup');

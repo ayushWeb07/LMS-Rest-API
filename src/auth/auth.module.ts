@@ -5,7 +5,7 @@ import { HashingService } from './services/hashing.service';
 import { BcryptService } from './services/bcrypt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ServerConfig } from '../config/interfaces/server_config.interface';
+import type { IServerConfig } from '../config/interfaces/server_config.interface';
 import { UsersModule } from '../users/users.module';
 
 @Module({
@@ -22,7 +22,7 @@ import { UsersModule } from '../users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         // get the server config
-        const serverConfig = configService.get<ServerConfig>('server');
+        const serverConfig = configService.get<IServerConfig>('server');
 
         if (!serverConfig) {
           throw new Error('Server configuration must be setup');
