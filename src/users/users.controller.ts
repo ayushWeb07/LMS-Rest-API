@@ -46,6 +46,7 @@ export class UsersController {
     };
   }
 
+  @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllUsers(@Query() findUsersDto: FindUsersDto) {

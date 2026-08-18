@@ -7,12 +7,10 @@ import {
   Post,
   Req,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { LoginAuthDto } from './dtos/login-auth.dto';
-import { AccessTokenGuard } from './guards/access-token/access-token.guard';
 import type { Request } from 'express';
 
 /** This is the Auth controller */
@@ -42,7 +40,6 @@ export class AuthController {
     };
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   async getProfile(@Req() req: Request) {
