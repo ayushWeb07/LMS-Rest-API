@@ -40,6 +40,12 @@ export class PostsService {
       id: userId,
     });
 
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
     // find the tags
     const tags = await this.tagsService.findMultipleTags({
       tagIds: createPostDto.tagIds,
@@ -99,6 +105,17 @@ export class PostsService {
   }
 
   async patchPost(patchPostDto: PatchPostDto, userId: number): Promise<void> {
+    // find the user by id
+    const user = await this.usersService.findUserById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
     // find the post
     const post = await this.postRepository.findOne({
       where: {
@@ -156,6 +173,17 @@ export class PostsService {
     deletePostDto: DeletePostDto,
     userId: number,
   ): Promise<void> {
+    // find the user by id
+    const user = await this.usersService.findUserById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
     // find the post
     const post = await this.postRepository.findOne({
       where: {
