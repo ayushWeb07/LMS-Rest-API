@@ -12,6 +12,8 @@ import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { LoginAuthDto } from './dtos/login-auth.dto';
 import type { Request } from 'express';
+import { SetAuthType } from './decorators/set-auth-type.decorator';
+import { AuthType } from './enums/auth-type.enum';
 
 /** This is the Auth controller */
 @Controller('auth')
@@ -29,6 +31,7 @@ export class AuthController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async loginAuth(@Body() loginAuthDto: LoginAuthDto) {

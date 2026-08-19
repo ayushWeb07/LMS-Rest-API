@@ -35,14 +35,10 @@ export class AuthGuard implements CanActivate {
     for (const type of authTypes) {
       const guard = this.authGuardsMap[type];
 
-      try {
-        const res = await guard.canActivate(context);
+      const res = await guard.canActivate(context);
 
-        if (res) {
-          return true;
-        }
-      } catch {
-        continue;
+      if (res) {
+        return true;
       }
     }
 
