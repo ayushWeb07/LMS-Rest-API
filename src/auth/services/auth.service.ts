@@ -59,10 +59,16 @@ export class AuthService {
     return token;
   }
 
-  async getProfile(getProfileAuthDto: GetProfileAuthDto): Promise<User> {
+  async getProfile(userId: number): Promise<User> {
     const user = await this.usersService.findUserById({
-      id: getProfileAuthDto.id,
+      id: userId,
     });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
 
     return user;
   }

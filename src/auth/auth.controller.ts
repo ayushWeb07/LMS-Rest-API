@@ -45,9 +45,7 @@ export class AuthController {
   @Get('profile')
   @HttpCode(HttpStatus.OK)
   async getProfile(@AuthenticatedUser('userId') userId: number) {
-    const user = await this.authService.getProfile({
-      id: userId,
-    });
+    const user = await this.authService.getProfile(userId);
 
     return {
       message: 'Profile successfully fetched',
