@@ -41,7 +41,7 @@ import { SkipAuthGuard } from './guards/skip-auth.guard';
         return {
           secret: serverConfig.jwtSecretKey,
           signOptions: {
-            expiresIn: serverConfig.jwtExpires,
+            expiresIn: `${serverConfig.jwtExpires}s`,
           },
         };
       },
