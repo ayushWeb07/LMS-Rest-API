@@ -5,7 +5,6 @@ import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { HashingService } from './hashing.service';
 import { User } from '../../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { FindUserByIdDto } from '../../users/dtos/find-user-by-id.dto';
 import { GetProfileAuthDto } from '../dtos/get-profile-auth.dto';
 import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
 
@@ -52,6 +51,7 @@ export class AuthService {
     // generate tokens
     const payload: IJwtAuthResponse = {
       userId: user.id,
+      userName: user.username,
       userEmail: user.email,
     };
     const token = await this.jwtService.signAsync(payload);
