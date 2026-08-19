@@ -9,6 +9,8 @@ import type { IServerConfig } from '../config/interfaces/server_config.interface
 import { UsersModule } from '../users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './guards/access-token.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { SkipAuthGuard } from './guards/skip-auth.guard';
 
 @Module({
   controllers: [AuthController],
@@ -18,9 +20,11 @@ import { AccessTokenGuard } from './guards/access-token.guard';
       provide: HashingService,
       useClass: BcryptService,
     },
+    AccessTokenGuard,
+    SkipAuthGuard,
     {
       provide: APP_GUARD,
-      useClass: AccessTokenGuard,
+      useClass: AuthGuard,
     },
   ],
   imports: [
