@@ -17,6 +17,8 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { FindUsersDto } from './dtos/find-users.dto';
+import { SetAuthType } from '../auth/decorators/set-auth-type.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 /** This is the Users controller */
 @Controller('users')
@@ -45,6 +47,7 @@ export class UsersController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllUsers(@Query() findUsersDto: FindUsersDto) {

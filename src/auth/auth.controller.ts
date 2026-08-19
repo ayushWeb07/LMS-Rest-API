@@ -14,6 +14,7 @@ import { LoginAuthDto } from './dtos/login-auth.dto';
 import type { Request } from 'express';
 import { SetAuthType } from './decorators/set-auth-type.decorator';
 import { AuthType } from './enums/auth-type.enum';
+import { AuthenticatedUser } from './decorators/authenticated-user.decorator';
 
 /** This is the Auth controller */
 @Controller('auth')
@@ -40,6 +41,15 @@ export class AuthController {
     return {
       message: 'User successfully logged in',
       token,
+    };
+  }
+
+  @Get('my-email')
+  @HttpCode(HttpStatus.OK)
+  getMyName(@AuthenticatedUser('userEmail') userEmail: string) {
+    return {
+      message: 'User email successfully fetched',
+      userEmail,
     };
   }
 

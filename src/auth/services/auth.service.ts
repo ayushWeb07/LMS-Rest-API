@@ -7,6 +7,7 @@ import { User } from '../../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { FindUserByIdDto } from '../../users/dtos/find-user-by-id.dto';
 import { GetProfileAuthDto } from '../dtos/get-profile-auth.dto';
+import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
 
 /** This is the Auth service */
 @Injectable()
@@ -49,10 +50,11 @@ export class AuthService {
     }
 
     // generate tokens
-    const token = await this.jwtService.signAsync({
+    const payload: IJwtAuthResponse = {
       userId: user.id,
       userEmail: user.email,
-    });
+    };
+    const token = await this.jwtService.signAsync(payload);
 
     return token;
   }
