@@ -161,6 +161,9 @@ export class PostsService {
       where: {
         id: deletePostDto.id,
       },
+      relations: {
+        author: true,
+      },
     });
 
     if (!post) {

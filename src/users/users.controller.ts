@@ -11,31 +11,18 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './services/users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
-import { DeleteUserDto } from './dtos/delete-user.dto';
 import { BulkCreateUsersDto } from './dtos/bulk-create-users.dto';
 import { FindUsersDto } from './dtos/find-users.dto';
 import { SetAuthType } from '../auth/decorators/set-auth-type.decorator';
 import { AuthType } from '../auth/enums/auth-type.enum';
+import { AuthenticatedUser } from '../auth/decorators/authenticated-user.decorator';
 
 /** This is the Users controller */
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    const user = await this.usersService.createUser(createUserDto);
-
-    return {
-      message: 'User successfully created',
-      user,
-    };
-  }
-
   @Post('bulk')
   @HttpCode(HttpStatus.CREATED)
   async bulkCreateUsers(@Body() bulkCreateUsersDto: BulkCreateUsersDto) {
@@ -73,23 +60,26 @@ export class UsersController {
 
   @Patch()
   @HttpCode(HttpStatus.OK)
-  async patchUser(@Body() patchUserDto: PatchUserDto) {
+  async patchUser(
+    @Body() patchUserDto: PatchUserDto,
+    @AuthenticatedUser('userId') userId: number,
+  ) {
     // update it
-    await this.usersService.patchUser(patchUserDto);
+    await this.usersService.patchUser(patchUserDto, userId);
 
     return {
-      message: `User with id '${patchUserDto.id}' got successfully updated`,
+      message: `User with id '${userId}' got successfully updated`,
     };
   }
 
-  @Delete(':id')
+  @Delete()
   @HttpCode(HttpStatus.OK)
-  async deleteUser(@Param() deleteUserDto: DeleteUserDto) {
+  async deleteUser(@AuthenticatedUser('userId') userId: number) {
     // delete it
-    await this.usersService.deleteUser(deleteUserDto);
+    await this.usersService.deleteUser(userId);
 
     return {
-      message: `User with id '${deleteUserDto.id}' got successfully deleted`,
+      message: `User with id '${userId}' got successfully deleted`,
     };
   }
 }
