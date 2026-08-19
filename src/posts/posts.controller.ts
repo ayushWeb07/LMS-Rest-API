@@ -22,6 +22,9 @@ import { PatchPostDto } from './dtos/patch-post.dto';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { DeletePostDto } from './dtos/delete-post.dto';
 import { FindPostsDto } from './dtos/find-posts.dto';
+import { AuthenticatedUser } from '../auth/decorators/authenticated-user.decorator';
+import { SetAuthType } from '../auth/decorators/set-auth-type.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 /** This is the Posts controller */
 @Controller('posts')
@@ -40,8 +43,11 @@ export class PostsController {
   @ApiBadRequestResponse({
     description: 'Invalid input data provided.',
   })
-  async createPost(@Body() createPostDto: CreatePostDto) {
-    const post = await this.postsService.createPost(createPostDto);
+  async createPost(
+    @Body() createPostDto: CreatePostDto,
+    @AuthenticatedUser('userId') userId: number,
+  ) {
+    const post = await this.postsService.createPost(createPostDto, userId);
 
     return {
       message: 'Post successfully created',
@@ -49,6 +55,7 @@ export class PostsController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllPosts(@Query() findPostsDto: FindPostsDto) {
@@ -59,6 +66,7 @@ export class PostsController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findPostById(@Param() findPostByIdDto: FindPostByIdDto) {
@@ -82,8 +90,11 @@ export class PostsController {
   @ApiBadRequestResponse({
     description: 'Invalid input data provided.',
   })
-  async patchPost(@Body() patchPostDto: PatchPostDto) {
-    await this.postsService.patchPost(patchPostDto);
+  async patchPost(
+    @Body() patchPostDto: PatchPostDto,
+    @AuthenticatedUser('userId') userId: number,
+  ) {
+    await this.postsService.patchPost(patchPostDto, userId);
 
     return {
       message: 'Post successfully updated',
@@ -92,8 +103,11 @@ export class PostsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async deletePost(@Param() deletePostDto: DeletePostDto) {
-    await this.postsService.deletePost(deletePostDto);
+  async deletePost(
+    @Param() deletePostDto: DeletePostDto,
+    @AuthenticatedUser('userId') userId: number,
+  ) {
+    await this.postsService.deletePost(deletePostDto, userId);
 
     return {
       message: 'Post successfully deleted',

@@ -5,13 +5,10 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
 import { LoginAuthDto } from './dtos/login-auth.dto';
-import type { Request } from 'express';
 import { SetAuthType } from './decorators/set-auth-type.decorator';
 import { AuthType } from './enums/auth-type.enum';
 import { AuthenticatedUser } from './decorators/authenticated-user.decorator';
@@ -21,6 +18,7 @@ import { AuthenticatedUser } from './decorators/authenticated-user.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @SetAuthType(AuthType.NONE)
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async registerAuth(@Body() registerAuthDto: RegisterAuthDto) {
@@ -44,26 +42,9 @@ export class AuthController {
     };
   }
 
-  @Get('my-email')
-  @HttpCode(HttpStatus.OK)
-  getMyName(@AuthenticatedUser('userEmail') userEmail: string) {
-    return {
-      message: 'User email successfully fetched',
-      userEmail,
-    };
-  }
-
   @Get('profile')
   @HttpCode(HttpStatus.OK)
-  async getProfile(@Req() req: Request) {
-    const userId = req.userId;
-
-    if (!userId) {
-      throw new UnauthorizedException(
-        'Access denied: please login again to view your profile',
-      );
-    }
-
+  async getProfile(@AuthenticatedUser('userId') userId: number) {
     const user = await this.authService.getProfile({
       id: userId,
     });
