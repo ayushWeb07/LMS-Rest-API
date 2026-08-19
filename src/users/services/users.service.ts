@@ -2,13 +2,13 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
-import { DeleteUserDto } from '../dtos/delete-user.dto';
 import { PatchUserDto } from '../dtos/patch-user.dto';
 import { FindUserByEmailAndUsernameDto } from '../dtos/find-user-by-email-and-username.dto';
 import { UserConflictEnum } from '../enums/user-conflict.enum';
@@ -141,17 +141,17 @@ export class UsersService {
     return UserConflictEnum.NO_USER;
   }
 
-  async patchUser(patchUserDto: PatchUserDto): Promise<void> {
+  async patchUser(patchUserDto: PatchUserDto, userId: number): Promise<void> {
     // find the user by id
     const user = await this.usersRepository.findOne({
       where: {
-        id: patchUserDto.id,
+        id: userId,
       },
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `User with id '${patchUserDto.id}' does not exist`,
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
       );
     }
 
@@ -190,7 +190,7 @@ export class UsersService {
     // update it
     await this.usersRepository.update(
       {
-        id: patchUserDto.id,
+        id: userId,
       },
       {
         ...patchUserDto,
@@ -198,23 +198,23 @@ export class UsersService {
     );
   }
 
-  async deleteUser(deleteUserDto: DeleteUserDto): Promise<void> {
+  async deleteUser(userId: number): Promise<void> {
     // find the user by id
     const user = await this.usersRepository.findOne({
       where: {
-        id: deleteUserDto.id,
+        id: userId,
       },
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `User with id '${deleteUserDto.id}' does not exist`,
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
       );
     }
 
     // delete the user
     await this.usersRepository.delete({
-      id: deleteUserDto.id,
+      id: userId,
     });
   }
 }

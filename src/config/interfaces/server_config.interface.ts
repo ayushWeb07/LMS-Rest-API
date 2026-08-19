@@ -1,5 +1,5 @@
 /** This is Interface for Server config */
-export interface ServerConfig {
+export interface IServerConfig {
   /** The port where the server will run */
   port: number;
 

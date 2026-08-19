@@ -1,5 +1,5 @@
 /** This is Interface for Database config */
-export interface DatabaseConfig {
+export interface IDatabaseConfig {
   /** The database host */
   host: string;
   /** The database port */

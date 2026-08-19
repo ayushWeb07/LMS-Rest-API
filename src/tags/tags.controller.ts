@@ -14,6 +14,8 @@ import { CreateTagDto } from './dtos/create-tag.dto';
 import { FindTagByIdDto } from './dtos/find-tag-by-id.dto';
 import { DeleteTagDto } from './dtos/delete-tag.dto';
 import { PatchTagDto } from './dtos/patch-tag.dto';
+import { SetAuthType } from '../auth/decorators/set-auth-type.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 @Controller('tags')
 export class TagsController {
@@ -30,6 +32,7 @@ export class TagsController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAllTags() {
@@ -41,6 +44,7 @@ export class TagsController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findTagById(@Param() findTagByIdDto: FindTagByIdDto) {

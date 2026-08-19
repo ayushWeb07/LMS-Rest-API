@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../../users/services/users.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
@@ -15,7 +16,6 @@ import { FindPostByIdDto } from '../dtos/find-post-by-id.dto';
 import { DeletePostDto } from '../dtos/delete-post.dto';
 import { TagsService } from '../../tags/services/tags.service';
 import { Tag } from '../../tags/tag.entity';
-import { User } from '../../users/user.entity';
 import { FindPostsDto } from '../dtos/find-posts.dto';
 
 /** This is the Posts service */
@@ -31,15 +31,18 @@ export class PostsService {
     private postRepository: Repository<Post>,
   ) {}
 
-  async createPost(createPostDto: CreatePostDto): Promise<Post> {
+  async createPost(
+    createPostDto: CreatePostDto,
+    userId: number,
+  ): Promise<Post> {
     // find the user
     const user = await this.usersService.findUserById({
-      id: createPostDto.authorId,
+      id: userId,
     });
 
     if (!user) {
-      throw new NotFoundException(
-        `Author with id '${createPostDto.authorId}' does not exist`,
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
       );
     }
 
@@ -101,7 +104,18 @@ export class PostsService {
     return post;
   }
 
-  async patchPost(patchPostDto: PatchPostDto): Promise<void> {
+  async patchPost(patchPostDto: PatchPostDto, userId: number): Promise<void> {
+    // find the user by id
+    const user = await this.usersService.findUserById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
     // find the post
     const post = await this.postRepository.findOne({
       where: {
@@ -119,19 +133,11 @@ export class PostsService {
       );
     }
 
-    // check if author is updated
-    let updatedAuthor: User | null = null;
-
-    if (patchPostDto.authorId) {
-      updatedAuthor = await this.usersService.findUserById({
-        id: patchPostDto.authorId,
-      });
-
-      if (!updatedAuthor) {
-        throw new NotFoundException(
-          `Author with id '${patchPostDto.authorId}' does not exist`,
-        );
-      }
+    // check if the current user is actually its author
+    if (post.author.id !== userId) {
+      throw new UnauthorizedException(
+        'You do not have the permissions to update this post',
+      );
     }
 
     // check if tags got updated
@@ -156,9 +162,6 @@ export class PostsService {
     post.postType = patchPostDto.postType ?? post.postType;
     post.postStatus = patchPostDto.postStatus ?? post.postStatus;
 
-    // update the author
-    post.author = updatedAuthor ?? post.author;
-
     // update the tags on post
     post.tags = updatedTags.length > 0 ? updatedTags : post.tags;
 
@@ -166,17 +169,41 @@ export class PostsService {
     await this.postRepository.save(post);
   }
 
-  async deletePost(deletePostDto: DeletePostDto): Promise<void> {
+  async deletePost(
+    deletePostDto: DeletePostDto,
+    userId: number,
+  ): Promise<void> {
+    // find the user by id
+    const user = await this.usersService.findUserById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
     // find the post
     const post = await this.postRepository.findOne({
       where: {
         id: deletePostDto.id,
+      },
+      relations: {
+        author: true,
       },
     });
 
     if (!post) {
       throw new NotFoundException(
         `Post with id '${deletePostDto.id}' does not exist`,
+      );
+    }
+
+    // check if the current user is actually its author
+    if (post.author.id !== userId) {
+      throw new UnauthorizedException(
+        'You do not have the permissions to delete this post',
       );
     }
 

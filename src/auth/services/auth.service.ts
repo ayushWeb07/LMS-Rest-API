@@ -5,6 +5,8 @@ import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { HashingService } from './hashing.service';
 import { User } from '../../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { GetProfileAuthDto } from '../dtos/get-profile-auth.dto';
+import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
 
 /** This is the Auth service */
 @Injectable()
@@ -47,11 +49,27 @@ export class AuthService {
     }
 
     // generate tokens
-    const token = await this.jwtService.signAsync({
-      id: user.id,
-      email: user.email,
-    });
+    const payload: IJwtAuthResponse = {
+      userId: user.id,
+      userName: user.username,
+      userEmail: user.email,
+    };
+    const token = await this.jwtService.signAsync(payload);
 
     return token;
+  }
+
+  async getProfile(userId: number): Promise<User> {
+    const user = await this.usersService.findUserById({
+      id: userId,
+    });
+
+    if (!user) {
+      throw new UnauthorizedException(
+        `We cannot identify you as an authenticated user. Please login again`,
+      );
+    }
+
+    return user;
   }
 }
