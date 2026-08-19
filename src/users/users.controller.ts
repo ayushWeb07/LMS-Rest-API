@@ -59,6 +59,7 @@ export class UsersController {
     };
   }
 
+  @SetAuthType(AuthType.NONE)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findUserById(@Param() findUserByIdDto: FindUserByIdDto) {
