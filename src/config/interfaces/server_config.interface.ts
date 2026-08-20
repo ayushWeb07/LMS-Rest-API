@@ -10,4 +10,7 @@ export interface IServerConfig {
   jwtAccessExpires: number;
   jwtRefreshSecretKey: string;
   jwtRefreshExpires: number;
+
+  googleClientId: string;
+  googleClientSecret: string;
 }
