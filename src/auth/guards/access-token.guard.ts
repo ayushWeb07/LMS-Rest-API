@@ -2,15 +2,35 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import type { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
+import { IJwtAccessPayload } from '../interfaces/jwt-access-payload.interface';
+import { ConfigService } from '@nestjs/config';
+import { IServerConfig } from '../../config/interfaces/server_config.interface';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  private readonly serverConfig: IServerConfig;
+
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {
+    // extract the server config from the config service
+    const serverConfig = this.configService.get<IServerConfig>('server');
+
+    if (!serverConfig) {
+      throw new InternalServerErrorException(
+        'Server configuration must be setup',
+      );
+    }
+
+    this.serverConfig = serverConfig;
+  }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // extract request from execution context
@@ -41,10 +61,14 @@ export class AccessTokenGuard implements CanActivate {
       );
     }
 
-    // verify the token
+    // verify the access token
     try {
-      const payload: IJwtAuthResponse =
-        await this.jwtService.verifyAsync(token);
+      const payload: IJwtAccessPayload = await this.jwtService.verifyAsync(
+        token,
+        {
+          secret: this.serverConfig.jwtAccessSecretKey,
+        },
+      );
 
       // attach the user details to the request
       request.userId = payload.userId;

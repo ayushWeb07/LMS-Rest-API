@@ -18,8 +18,6 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly hashingService: HashingService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly generateTokensService: GenerateTokensService,
     private readonly refreshTokensService: RefreshTokensService,
   ) {}
