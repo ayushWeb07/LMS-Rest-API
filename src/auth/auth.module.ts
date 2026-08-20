@@ -11,9 +11,11 @@ import { AuthGuard } from './guards/auth.guard';
 import { SkipAuthGuard } from './guards/skip-auth.guard';
 import { GenerateTokensService } from './services/generate-tokens.service';
 import { RefreshTokensService } from './services/refresh-tokens.service';
+import { GoogleAuthController } from './social/google-auth.controller';
+import { GoogleAuthService } from './social/services/google-auth.service';
 
 @Module({
-  controllers: [AuthController],
+  controllers: [AuthController, GoogleAuthController],
   providers: [
     AuthService,
     {
@@ -28,6 +30,7 @@ import { RefreshTokensService } from './services/refresh-tokens.service';
     },
     GenerateTokensService,
     RefreshTokensService,
+    GoogleAuthService,
   ],
   imports: [JwtModule.register({}), UsersModule],
 })
