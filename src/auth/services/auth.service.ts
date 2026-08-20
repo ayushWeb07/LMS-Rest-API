@@ -9,6 +9,8 @@ import { ConfigService } from '@nestjs/config';
 import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
 import { GenerateTokensService } from './generate-tokens.service';
 import { IGenerateTokensResponse } from '../interfaces/generate-tokens-response.interface';
+import { RefreshTokensService } from './refresh-tokens.service';
+import { RefreshTokensDto } from '../dtos/refresh-tokens.dto';
 
 /** This is the Auth service */
 @Injectable()
@@ -19,6 +21,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly generateTokensService: GenerateTokensService,
+    private readonly refreshTokensService: RefreshTokensService,
   ) {}
 
   async registerAuth(registerAuthDto: RegisterAuthDto): Promise<User> {
@@ -80,5 +83,14 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async refreshTokens(
+    refreshTokensDto: RefreshTokensDto,
+  ): Promise<IGenerateTokensResponse> {
+    const tokens: IGenerateTokensResponse =
+      await this.refreshTokensService.refreshTokens(refreshTokensDto);
+
+    return tokens;
   }
 }
