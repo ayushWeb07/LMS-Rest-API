@@ -10,6 +10,7 @@ import { AccessTokenGuard } from './guards/access-token.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { SkipAuthGuard } from './guards/skip-auth.guard';
 import { GenerateTokensService } from './services/generate-tokens.service';
+import { RefreshTokensService } from './services/refresh-tokens.service';
 
 @Module({
   controllers: [AuthController],
@@ -26,6 +27,7 @@ import { GenerateTokensService } from './services/generate-tokens.service';
       useClass: AuthGuard,
     },
     GenerateTokensService,
+    RefreshTokensService,
   ],
   imports: [JwtModule.register({}), UsersModule],
 })

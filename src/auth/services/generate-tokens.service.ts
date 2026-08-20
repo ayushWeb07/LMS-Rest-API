@@ -3,8 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IServerConfig } from '../../config/interfaces/server_config.interface';
 import { GenerateTokensDto } from '../dtos/generate-tokens.dto';
-import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
 import { IGenerateTokensResponse } from '../interfaces/generate-tokens-response.interface';
+import { IJwtAccessPayload } from '../interfaces/jwt-access-payload.interface';
+import { IJwtRefreshPayload } from '../interfaces/jwt-refresh-payload.interface';
 
 @Injectable()
 export class GenerateTokensService {
@@ -29,11 +30,11 @@ export class GenerateTokensService {
     generateTokensDto: GenerateTokensDto,
   ): Promise<IGenerateTokensResponse> {
     // build the payloads
-    const accessPayload: IJwtAuthResponse = {
+    const accessPayload: IJwtAccessPayload = {
       ...generateTokensDto,
     };
 
-    const refreshPayload = {
+    const refreshPayload: IJwtRefreshPayload = {
       userId: generateTokensDto.userId,
     };
 
