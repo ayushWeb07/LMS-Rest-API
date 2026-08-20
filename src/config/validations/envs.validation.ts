@@ -5,8 +5,10 @@ export default Joi.object({
     .required()
     .valid('development', 'production', 'testing'),
   SERVER_PORT: Joi.number().required().port(),
-  JWT_SECRET_KEY: Joi.string().required().length(64), // 256 bits
-  JWT_EXPIRES: Joi.number().required(),
+  JWT_ACCESS_SECRET_KEY: Joi.string().required().length(64), // 256 bits
+  JWT_ACCESS_EXPIRES: Joi.number().required(),
+  JWT_REFRESH_SECRET_KEY: Joi.string().required().length(64), // 256 bits
+  JWT_REFRESH_EXPIRES: Joi.number().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required().port(),
   DATABASE_USER: Joi.string().required(),

@@ -12,6 +12,8 @@ import { LoginAuthDto } from './dtos/login-auth.dto';
 import { SetAuthType } from './decorators/set-auth-type.decorator';
 import { AuthType } from './enums/auth-type.enum';
 import { AuthenticatedUser } from './decorators/authenticated-user.decorator';
+import { IGenerateTokensResponse } from './interfaces/generate-tokens-response.interface';
+import { RefreshTokensDto } from './dtos/refresh-tokens.dto';
 
 /** This is the Auth controller */
 @Controller('auth')
@@ -34,11 +36,12 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async loginAuth(@Body() loginAuthDto: LoginAuthDto) {
-    const token = await this.authService.loginAuth(loginAuthDto);
+    const tokens: IGenerateTokensResponse =
+      await this.authService.loginAuth(loginAuthDto);
 
     return {
       message: 'User successfully logged in',
-      token,
+      tokens,
     };
   }
 
@@ -50,6 +53,19 @@ export class AuthController {
     return {
       message: 'Profile successfully fetched',
       user,
+    };
+  }
+
+  @SetAuthType(AuthType.NONE)
+  @Post('refresh-tokens')
+  @HttpCode(HttpStatus.OK)
+  async refreshTokens(@Body() refreshTokensDto: RefreshTokensDto) {
+    const tokens: IGenerateTokensResponse =
+      await this.authService.refreshTokens(refreshTokensDto);
+
+    return {
+      message: 'Tokens successfully refreshed',
+      tokens,
     };
   }
 }

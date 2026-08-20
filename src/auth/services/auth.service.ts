@@ -5,8 +5,12 @@ import { LoginAuthDto } from '../dtos/login-auth.dto';
 import { HashingService } from './hashing.service';
 import { User } from '../../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { GetProfileAuthDto } from '../dtos/get-profile-auth.dto';
+import { ConfigService } from '@nestjs/config';
 import { IJwtAuthResponse } from '../interfaces/jwt-auth-response.interface';
+import { GenerateTokensService } from './generate-tokens.service';
+import { IGenerateTokensResponse } from '../interfaces/generate-tokens-response.interface';
+import { RefreshTokensService } from './refresh-tokens.service';
+import { RefreshTokensDto } from '../dtos/refresh-tokens.dto';
 
 /** This is the Auth service */
 @Injectable()
@@ -14,7 +18,8 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly hashingService: HashingService,
-    private readonly jwtService: JwtService,
+    private readonly generateTokensService: GenerateTokensService,
+    private readonly refreshTokensService: RefreshTokensService,
   ) {}
 
   async registerAuth(registerAuthDto: RegisterAuthDto): Promise<User> {
@@ -30,7 +35,9 @@ export class AuthService {
     return user;
   }
 
-  async loginAuth(loginAuthDto: LoginAuthDto): Promise<string> {
+  async loginAuth(
+    loginAuthDto: LoginAuthDto,
+  ): Promise<IGenerateTokensResponse> {
     // find the user by email
     const user = await this.usersService.findUserByEmail({
       email: loginAuthDto.email,
@@ -49,14 +56,17 @@ export class AuthService {
     }
 
     // generate tokens
-    const payload: IJwtAuthResponse = {
-      userId: user.id,
-      userName: user.username,
-      userEmail: user.email,
-    };
-    const token = await this.jwtService.signAsync(payload);
+    const { accessToken, refreshToken } =
+      await this.generateTokensService.generateTokens({
+        userId: user.id,
+        userName: user.username,
+        userEmail: user.email,
+      });
 
-    return token;
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   async getProfile(userId: number): Promise<User> {
@@ -71,5 +81,14 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async refreshTokens(
+    refreshTokensDto: RefreshTokensDto,
+  ): Promise<IGenerateTokensResponse> {
+    const tokens: IGenerateTokensResponse =
+      await this.refreshTokensService.refreshTokens(refreshTokensDto);
+
+    return tokens;
   }
 }
