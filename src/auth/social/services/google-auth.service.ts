@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { IServerConfig } from '../../../config/interfaces/server_config.interface';
 
 @Injectable()
-export class GoogleAuthService implements OnModuleInit {
+export class GoogleAuthService {
   private authClient: OAuth2Client;
   private readonly serverConfig: IServerConfig;
 
@@ -27,9 +27,8 @@ export class GoogleAuthService implements OnModuleInit {
     }
 
     this.serverConfig = serverConfig;
-  }
 
-  onModuleInit() {
+    // instantiate the auth client
     this.authClient = new OAuth2Client(
       this.serverConfig.googleClientId,
       this.serverConfig.googleClientSecret,
