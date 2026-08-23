@@ -9,6 +9,8 @@ export default Joi.object({
   JWT_ACCESS_EXPIRES: Joi.number().required(),
   JWT_REFRESH_SECRET_KEY: Joi.string().required().length(64), // 256 bits
   JWT_REFRESH_EXPIRES: Joi.number().required(),
+  GOOGLE_CLIENT_ID: Joi.string().required(),
+  GOOGLE_CLIENT_SECRET: Joi.string().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required().port(),
   DATABASE_USER: Joi.string().required(),

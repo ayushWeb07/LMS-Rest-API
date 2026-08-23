@@ -12,24 +12,29 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(25)
+  @MinLength(3)
+  @MaxLength(75)
   username: string;
 
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  @MaxLength(25)
+  @MaxLength(50)
   email: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MinLength(60)
   @MaxLength(60)
   @Matches(/^\$2[aby]?\$\d{2}\$[./A-Za-z0-9]{53}$/, {
     message: 'Not a valid bcrypt hash',
   })
-  password: string;
+  password?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  googleId?: string;
 
   @IsOptional()
   @IsBoolean()

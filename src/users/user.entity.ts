@@ -17,7 +17,7 @@ export class User {
   @Column({
     name: 'username',
     type: 'varchar',
-    length: 25,
+    length: 75,
     nullable: false,
     unique: true,
     comment: 'Username of the user',
@@ -27,7 +27,7 @@ export class User {
   @Column({
     name: 'email',
     type: 'varchar',
-    length: 25,
+    length: 50,
     nullable: false,
     unique: true,
     comment: 'Email of the user',
@@ -38,10 +38,19 @@ export class User {
     name: 'password',
     type: 'varchar',
     length: 60,
-    nullable: false,
+    nullable: true,
     comment: 'Password of the user',
   })
-  password: string;
+  password?: string;
+
+  @Column({
+    name: 'google_id',
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    comment: 'Google id of the user',
+  })
+  googleId?: string;
 
   @Column({
     name: 'is_verified',

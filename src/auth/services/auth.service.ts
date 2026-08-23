@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../../users/services/users.service';
 import { RegisterAuthDto } from '../dtos/register-auth.dto';
 import { LoginAuthDto } from '../dtos/login-auth.dto';
@@ -38,15 +42,28 @@ export class AuthService {
   async loginAuth(
     loginAuthDto: LoginAuthDto,
   ): Promise<IGenerateTokensResponse> {
+    let user: User | null = null;
+
     // find the user by email
-    const user = await this.usersService.findUserByEmail({
-      email: loginAuthDto.email,
-    });
+    try {
+      user = await this.usersService.findUserByEmail({
+        email: loginAuthDto.email,
+      });
+    } catch {
+      throw new UnauthorizedException(
+        'Incorrect credentials has been provided',
+      );
+    }
+
+    // signup was done using google
+    if (user.googleId) {
+      throw new UnauthorizedException('Please login via Google');
+    }
 
     // compare passwords
     const isPasswordsMatch = await this.hashingService.comparePasswords(
       loginAuthDto.password,
-      user.password,
+      user.password!,
     );
 
     if (!isPasswordsMatch) {
@@ -73,12 +90,6 @@ export class AuthService {
     const user = await this.usersService.findUserById({
       id: userId,
     });
-
-    if (!user) {
-      throw new UnauthorizedException(
-        `We cannot identify you as an authenticated user. Please login again`,
-      );
-    }
 
     return user;
   }

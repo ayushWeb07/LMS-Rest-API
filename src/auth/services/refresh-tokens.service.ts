@@ -16,7 +16,7 @@ import { IGenerateTokensResponse } from '../interfaces/generate-tokens-response.
 
 @Injectable()
 export class RefreshTokensService {
-  private readonly serverConfig: IServerConfig;
+  private serverConfig: IServerConfig;
 
   constructor(
     private readonly configService: ConfigService,

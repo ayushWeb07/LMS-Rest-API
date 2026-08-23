@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -16,6 +17,7 @@ import { BulkCreateUsersDto } from '../dtos/bulk-create-users.dto';
 import { BulkCreateUsersService } from './bulk-create-users.service';
 import { FindUsersDto } from '../dtos/find-users.dto';
 import { FindUserByEmailDto } from '../dtos/find-user-by-email.dto';
+import { generateFromEmail } from 'unique-username-generator';
 
 /** This is the Users service */
 @Injectable()
@@ -216,5 +218,27 @@ export class UsersService {
     await this.usersRepository.delete({
       id: userId,
     });
+  }
+
+  async generateUniqueUsernameFromEmail(email: string): Promise<string> {
+    for (let i = 0; i < 5; i++) {
+      // generate the username
+      const username = generateFromEmail(email, 5);
+
+      // check if its taken
+      const user = await this.usersRepository.findOne({
+        where: {
+          username,
+        },
+      });
+
+      if (!user) {
+        return username;
+      }
+    }
+
+    throw new InternalServerErrorException(
+      'Could not generate a unique username for the user. Please try again later',
+    );
   }
 }

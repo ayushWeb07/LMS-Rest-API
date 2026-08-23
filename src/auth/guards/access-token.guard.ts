@@ -14,7 +14,7 @@ import { IServerConfig } from '../../config/interfaces/server_config.interface';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
-  private readonly serverConfig: IServerConfig;
+  private serverConfig: IServerConfig;
 
   constructor(
     private readonly jwtService: JwtService,

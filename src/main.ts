@@ -21,6 +21,10 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
+  // enable cors on the nest app
+  app.enableCors();
+
+  // serve the nest app
   await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();
