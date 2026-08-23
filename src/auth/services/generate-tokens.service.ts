@@ -9,7 +9,7 @@ import { IJwtRefreshPayload } from '../interfaces/jwt-refresh-payload.interface'
 
 @Injectable()
 export class GenerateTokensService {
-  private readonly serverConfig: IServerConfig;
+  private serverConfig: IServerConfig;
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
