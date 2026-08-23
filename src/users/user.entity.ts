@@ -17,7 +17,7 @@ export class User {
   @Column({
     name: 'username',
     type: 'varchar',
-    length: 50,
+    length: 75,
     nullable: false,
     unique: true,
     comment: 'Username of the user',
@@ -27,7 +27,7 @@ export class User {
   @Column({
     name: 'email',
     type: 'varchar',
-    length: 25,
+    length: 50,
     nullable: false,
     unique: true,
     comment: 'Email of the user',

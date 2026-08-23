@@ -13,7 +13,7 @@ export class LoginAuthDto {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  @MaxLength(25)
+  @MaxLength(50)
   email: string;
 
   @IsString()
