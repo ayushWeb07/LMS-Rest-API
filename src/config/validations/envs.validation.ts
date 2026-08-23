@@ -11,6 +11,7 @@ export default Joi.object({
   JWT_REFRESH_EXPIRES: Joi.number().required(),
   GOOGLE_CLIENT_ID: Joi.string().required(),
   GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  API_VERSION: Joi.string().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().required().port(),
   DATABASE_USER: Joi.string().required(),

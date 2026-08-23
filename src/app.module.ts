@@ -16,6 +16,10 @@ import type { IDatabaseConfig } from './config/interfaces/database_config.interf
 import databaseConfig from './config/database.config';
 import serverConfig from './config/server.config';
 import envsValidationSchema from './config/validations/envs.validation';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import {
+  ApiResponseFormatterInterceptor
+} from './common/interceptors/api-response-formatter/api-response-formatter.interceptor';
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
@@ -56,6 +60,12 @@ const NODE_ENV = process.env.NODE_ENV ?? 'development';
     MetaOptionsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ApiResponseFormatterInterceptor,
+    },
+  ],
 })
 export class AppModule {}

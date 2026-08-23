@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Post } from '../posts/post.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User {
@@ -34,6 +35,7 @@ export class User {
   })
   email: string;
 
+  @Exclude()
   @Column({
     name: 'password',
     type: 'varchar',
@@ -43,6 +45,7 @@ export class User {
   })
   password?: string;
 
+  @Exclude()
   @Column({
     name: 'google_id',
     type: 'varchar',
@@ -52,6 +55,7 @@ export class User {
   })
   googleId?: string;
 
+  @Exclude()
   @Column({
     name: 'is_verified',
     type: 'boolean',

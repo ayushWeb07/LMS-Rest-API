@@ -9,4 +9,5 @@ export default registerAs('server', () => ({
   jwtRefreshExpires: process.env.JWT_REFRESH_EXPIRES ?? 18000,
   googleClientId: process.env.GOOGLE_CLIENT_ID ?? '',
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+  apiVersion: process.env.API_VERSION ?? '1.0.0',
 }));
