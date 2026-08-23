@@ -13,4 +13,5 @@ export interface IServerConfig {
 
   googleClientId: string;
   googleClientSecret: string;
+  apiVersion: string;
 }

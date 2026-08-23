@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ApiResponseFormatterInterceptor } from './common/interceptors/api-response-formatter/api-response-formatter.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,9 +23,6 @@ async function bootstrap() {
 
   // enable cors on the nest app
   app.enableCors();
-
-  // attach the api response formatter interceptor
-  app.useGlobalInterceptors(new ApiResponseFormatterInterceptor());
 
   // serve the nest app
   await app.listen(process.env.PORT ?? 8080);
