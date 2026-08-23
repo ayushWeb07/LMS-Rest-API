@@ -12,8 +12,8 @@ import {
 export class RegisterAuthDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(25)
+  @MinLength(3)
+  @MaxLength(50)
   username: string;
 
   @IsString()

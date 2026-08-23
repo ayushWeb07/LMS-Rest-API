@@ -1,6 +1,7 @@
 import {
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   OnModuleInit,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { GoogleAuthDto } from '../dtos/google-auth.dto';
 import { User } from '../../../users/user.entity';
 import { GenerateTokensService } from '../../services/generate-tokens.service';
 import { IGenerateTokensResponse } from '../../interfaces/generate-tokens-response.interface';
+import { generateFromEmail, generateUsername } from 'unique-username-generator';
 
 @Injectable()
 export class GoogleAuthService implements OnModuleInit {
@@ -46,10 +48,16 @@ export class GoogleAuthService implements OnModuleInit {
   async authenticate(
     googleAuthDto: GoogleAuthDto,
   ): Promise<IGenerateTokensResponse> {
+    let ticket: LoginTicket | null;
+
     // verify the token
-    const ticket = await this.authClient.verifyIdToken({
-      idToken: googleAuthDto.token,
-    });
+    try {
+      ticket = await this.authClient.verifyIdToken({
+        idToken: googleAuthDto.token,
+      });
+    } catch {
+      throw new UnauthorizedException(`Invalid token has been provided`);
+    }
 
     // extract the payload
     const payload = ticket.getPayload();
@@ -60,11 +68,11 @@ export class GoogleAuthService implements OnModuleInit {
       );
     }
 
-    const { email, name, sub: googleId } = payload;
+    const { email, sub: googleId } = payload;
 
-    if (!email || !name) {
+    if (!email) {
       throw new UnauthorizedException(
-        'Something went wrong while fetching the username and email on google authentication',
+        'Something went wrong while fetching the email on google authentication',
       );
     }
 
@@ -75,13 +83,25 @@ export class GoogleAuthService implements OnModuleInit {
       user = await this.usersService.findUserByEmail({
         email,
       });
-    } catch {
-      // create the new user
-      user = await this.usersService.createUser({
-        username: name,
-        email: email,
-        googleId,
-      });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        const username =
+          await this.usersService.generateUniqueUsernameFromEmail(email);
+
+        // create the new user
+        user = await this.usersService.createUser({
+          username,
+          email,
+          googleId,
+          isVerified: true,
+        });
+      }
+    }
+
+    if (!user) {
+      throw new UnauthorizedException(
+        'Something went wrong while authenticating, please try again later',
+      );
     }
 
     // generate tokens

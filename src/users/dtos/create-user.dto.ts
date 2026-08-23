@@ -12,8 +12,8 @@ import {
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(10)
-  @MaxLength(25)
+  @MinLength(3)
+  @MaxLength(50)
   username: string;
 
   @IsString()
@@ -22,6 +22,7 @@ export class CreateUserDto {
   @MaxLength(25)
   email: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(60)
   @MaxLength(60)
@@ -30,6 +31,7 @@ export class CreateUserDto {
   })
   password?: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(255)
   googleId?: string;
