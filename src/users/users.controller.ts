@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -9,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './services/users.service';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
@@ -24,6 +26,7 @@ import { AuthenticatedUser } from '../auth/decorators/authenticated-user.decorat
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
   @Post('bulk')
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.CREATED)
   async bulkCreateUsers(@Body() bulkCreateUsersDto: BulkCreateUsersDto) {
     const users = await this.usersService.bulkCreateUsers(bulkCreateUsersDto);
@@ -36,6 +39,7 @@ export class UsersController {
 
   @SetAuthType(AuthType.NONE)
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   async findAllUsers(@Query() findUsersDto: FindUsersDto) {
     const users = await this.usersService.findAllUsers(findUsersDto);
@@ -48,6 +52,7 @@ export class UsersController {
 
   @SetAuthType(AuthType.NONE)
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   async findUserById(@Param() findUserByIdDto: FindUserByIdDto) {
     const user = await this.usersService.findUserById(findUserByIdDto);

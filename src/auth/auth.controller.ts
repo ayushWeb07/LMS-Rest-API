@@ -1,10 +1,10 @@
 import {
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Post,
+  Post, UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
@@ -22,6 +22,7 @@ export class AuthController {
 
   @SetAuthType(AuthType.NONE)
   @Post('register')
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.CREATED)
   async registerAuth(@Body() registerAuthDto: RegisterAuthDto) {
     const user = await this.authService.registerAuth(registerAuthDto);
@@ -46,6 +47,7 @@ export class AuthController {
   }
 
   @Get('profile')
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   async getProfile(@AuthenticatedUser('userId') userId: number) {
     const user = await this.authService.getProfile(userId);
