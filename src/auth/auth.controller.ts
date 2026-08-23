@@ -1,10 +1,12 @@
 import {
-  Body, ClassSerializerInterceptor,
+  Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Post, UseInterceptors,
+  Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { RegisterAuthDto } from './dtos/register-auth.dto';
